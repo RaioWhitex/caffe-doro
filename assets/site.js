@@ -58,6 +58,17 @@
     first: el.classList.contains('b1'), last: el.classList.contains('b4'), done: null
   }));
   bags.forEach(b => { b.el.style.zIndex = String(10 - Math.abs(b.i)); });
+  // branches and bags only appear after some scrolling: fetch them right after the first screen is painted
+  let deferredDone = false;
+  function loadDeferred() {
+    if (deferredDone) return;
+    deferredDone = true;
+    $$('img[data-src]').forEach(img => { img.src = img.dataset.src; img.removeAttribute('data-src'); });
+  }
+  addEventListener('scroll', loadDeferred, { passive: true, once: true });
+  addEventListener('load', () => ('requestIdleCallback' in window ? requestIdleCallback(loadDeferred, { timeout: 1500 }) : setTimeout(loadDeferred, 600)));
+  setTimeout(loadDeferred, 4000);   // safety net
+
   // a picture that fails to load simply disappears; the page stays complete without it
   $$('.stage img').forEach(img => {
     const hide = () => img.classList.add('broken');

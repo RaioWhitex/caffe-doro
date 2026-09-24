@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="pt-BR" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caffè D’oro · Cafés extraordinários nos Jardins</title>
+<meta name="description" content="Cafeteria e torrefação nos Jardins, em São Paulo. Reserve sua mesa no salão ou receba café torrado nesta semana em casa, no mesmo dia, em até 10&nbsp;km.">
+<meta name="theme-color" content="#140d09">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Caffè D’oro · Cafés extraordinários">
+<meta property="og:description" content="Reserve sua mesa no salão ou receba café fresco em casa, no mesmo dia.">
+<meta property="og:image" content="https://raiowhitex.github.io/caffe-doro/assets/img/og.jpg">
+<meta property="og:url" content="https://raiowhitex.github.io/caffe-doro/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f3cf7e'/%3E%3Cstop offset='1' stop-color='%23a8702a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23140d09'/%3E%3Cpath d='M12 44C18 20 40 6 52 12' fill='none' stroke='url(%23g)' stroke-width='2.4' stroke-linecap='round'/%3E%3Cellipse cx='31' cy='34' rx='12' ry='17' transform='rotate(32 31 34)' fill='url(%23g)'/%3E%3Cpath d='M25 46c6-6 2-14 12-24' fill='none' stroke='%23140d09' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Marcellus&family=Pinyon+Script&display=swap">
+<link rel="preload" as="image" href="assets/img/logo.webp">
+<link rel="stylesheet" href="assets/site.css">
+<script>document.documentElement.classList.replace('no-js','js')</script>
+</head>
+<body>
+<a class="skip" href="#main">Pular para o conteúdo</a>
+
+<!-- One fixed environment behind the whole page -->
+<div class="env" aria-hidden="true">
+  <div class="glow"></div>
+  <div class="dust"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="grain"></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#topo" aria-label="Caffè D’oro, voltar ao início">
+      <img src="assets/img/grao-ouro.webp" alt="" width="36" height="33">
+      <span>Caffè D’oro</span>
+    </a>
+    <nav class="links" aria-label="Principal">
+      <a href="#cafes">Cafés</a>
+      <a href="#salao">Salão</a>
+      <a href="#entrega">Entrega</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+    <div class="nav-act">
+      <button class="bag-btn" type="button" id="bagBtn" aria-label="Abrir sacola, 0 itens">
+        <svg width="22" height="22"><use href="#i-bag"/></svg>
+        <span class="bag-count" id="bagCount" aria-hidden="true">0</span>
+      </button>
+      <a class="btn gold small" href="#reservar">Reservar mesa</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mMenu" aria-label="Abrir menu"><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="m-menu" id="mMenu" hidden>
+    <a href="#cafes">Cafés</a>
+    <a href="#salao">Salão</a>
+    <a href="#reservar">Reservar mesa</a>
+    <a href="#entrega">Entrega</a>
+    <a href="#duvidas">Dúvidas</a>
+  </div>
+</header>
+
+<!-- HERO: layered scenes scrubbed by scroll. Default CSS state is the static hero. -->
+<section class="hero" id="topo" aria-label="Abertura">
+  <h1 class="sr">Caffè D’oro, cafeteria e cafés especiais nos Jardins, São Paulo</h1>
+  <div class="stage" id="stage">
+    <div class="scene sD" id="sD" aria-hidden="true">
+      <div class="cover land">
+        <img src="assets/img/servido.webp" alt="" width="1672" height="941" fetchpriority="high">
+        <span class="steam" style="--x:70%;--y:40%"><i></i><i></i><i></i></span>
+      </div>
+      <div class="cover port">
+        <img src="assets/img/servido-retrato.webp" alt="" width="941" height="1672" loading="lazy">
+        <span class="steam" style="--x:49%;--y:42%"><i></i><i></i><i></i></span>
+      </div>
+    </div>
+
+    <div class="scene sA" id="sA" aria-hidden="true">
+      <div class="logo-wrap" id="logoWrap">
+        <img class="logo" src="assets/img/logo.webp" alt="" width="1200" height="800">
+        <svg class="ring" viewBox="0 0 400 300" preserveAspectRatio="none"><ellipse cx="200" cy="150" rx="192" ry="142" pathLength="1"/></svg>
+      </div>
+    </div>
+
+    <div class="scene sB" id="sB" aria-hidden="true">
+      <img class="ramo r1" src="assets/img/ramo-a.webp" alt="" width="1600" height="533">
+      <img class="ramo r2" src="assets/img/ramo-b.webp" alt="" width="1600" height="533">
+      <img class="ramo r3" src="assets/img/ramo-b.webp" alt="" width="1600" height="533">
+    </div>
+
+    <div class="scene sC" id="sC" aria-hidden="true">
+      <div class="bags" id="bags">
+        <img class="bag" data-i="-4" src="assets/img/hero-robusta.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="-3" src="assets/img/hero-caturra.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="-2" src="assets/img/hero-excelsa.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="-1" src="assets/img/hero-arabica.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="0" src="assets/img/hero-geisha.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="1" src="assets/img/hero-bourbon.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="2" src="assets/img/hero-liberica.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="3" src="assets/img/hero-maragogipe.webp" alt="" width="440" height="560">
+        <img class="bag" data-i="4" src="assets/img/hero-typica.webp" alt="" width="440" height="560">
+      </div>
+    </div>
+
+    <div class="scrim" aria-hidden="true"></div>
+
+    <div class="band b1" data-a="0" data-b="0.2">
+      <p class="kick">Cafés extraordinários · Jardins, São Paulo</p>
+      <p class="script split" data-fx="depth">Café é tempo, em forma de experiência.</p>
+    </div>
+
+    <div class="band b2" data-a="0.25" data-b="0.47">
+      <h2 class="hl split" data-fx="part">Tudo começa / no pé.</h2>
+      <p class="sub">Nove origens, colhidas no ponto certo e torradas aqui, em pequenos lotes.</p>
+    </div>
+
+    <div class="band b3" data-a="0.52" data-b="0.74">
+      <h2 class="hl split" data-fx="drift">Torrado há dias. / Não há meses.</h2>
+      <p class="sub">A data da torra vem impressa em cada pacote. Passou de 20 dias, não sai da nossa loja.</p>
+    </div>
+
+    <div class="band b4 settle" data-a="0.8" data-b="1">
+      <div class="settle-top">
+        <img class="settle-mark" src="assets/img/grao-ouro.webp" alt="" width="72" height="66">
+        <h2 class="hl split" data-fx="rise">Sua mesa está pronta.</h2>
+        <p class="sub">Reserve um horário no salão ou receba café fresco em casa, no mesmo dia, em até 10&nbsp;km dos Jardins.</p>
+      </div>
+      <div class="cta-row">
+        <a class="btn gold" href="#reservar">Reservar mesa</a>
+        <a class="btn ghost" href="#cafes">Comprar café</a>
+      </div>
+    </div>
+
+    <div class="cue" id="cue" aria-hidden="true"><span>Role devagar</span><i></i></div>
+  </div>
+</section>
+
+<main id="main" tabindex="-1">
+  <svg class="thread" id="thread" aria-hidden="true"><path id="threadPath" pathLength="1"/><circle id="spark" r="3.5"/></svg>
+
+  <!-- 1. Promessas -->
+  <section class="sec promessas" id="tempo">
+    <div class="wrap prom-grid">
+      <div class="prom-head reveal">
+        <p class="kicker">O tempo certo</p>
+        <h2 class="display">Do pé à xícara, sem perder tempo.</h2>
+        <p class="lede">Café perde aroma a cada semana parado na prateleira. Por isso a gente torra pouco, torra sempre e entrega perto.</p>
+      </div>
+      <ol class="prom-list">
+        <li class="prom reveal">
+          <svg class="draw" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" pathLength="1"/><path d="M24 13v11l7 5" pathLength="1"/></svg>
+          <p class="num"><span class="count" data-to="20">20</span><small>dias</small></p>
+          <h3>Da torra à xícara</h3>
+          <p>Nenhum pacote sai daqui com mais de 20 dias de torra. A data vem impressa, para você conferir.</p>
+        </li>
+        <li class="prom reveal">
+          <svg class="draw" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 43s-13-12.5-13-23a13 13 0 0 1 26 0c0 10.5-13 23-13 23Z" pathLength="1"/><circle cx="24" cy="20" r="4.5" pathLength="1"/></svg>
+          <p class="num"><span class="count" data-to="10">10</span><small>km</small></p>
+          <h3>Entrega no mesmo dia</h3>
+          <p>Pediu até as 16h, recebe hoje. Atendemos até 10&nbsp;km da nossa loja nos Jardins.</p>
+        </li>
+        <li class="prom reveal">
+          <svg class="draw" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20h32M13 20v18M35 20v18M8 20l4-8h24l4 8" pathLength="1"/></svg>
+          <p class="num"><span class="count" data-to="20">20</span><small>mesas</small></p>
+          <h3>Hora marcada, sem fila</h3>
+          <p>Reserve a sua mesa pelo site. Ninguém apressa a sua conta.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 2. Loja: os nove cafés -->
+  <section class="sec loja" id="cafes">
+    <div class="wrap">
+      <header class="sec-head split-head reveal">
+        <div>
+          <p class="kicker">A loja</p>
+          <h2 class="display">Nove origens. Escolha a sua.</h2>
+        </div>
+        <p class="lede">Em grãos para moer na hora, moído para o coador ou em cápsulas para a correria. Todos torrados nesta semana.</p>
+      </header>
+
+      <div class="shop reveal" id="shop">
+        <div class="v-list" role="tablist" aria-label="Variedades de café" id="vList"></div>
+        <div class="v-stage" role="tabpanel" id="vPanel" aria-live="polite">
+          <div class="v-visual">
+            <div class="halo" aria-hidden="true"></div>
+            <img class="v-img" id="vImgA" alt="" width="760" height="950">
+            <img class="v-img" id="vImgB" alt="" width="760" height="950">
+          </div>
+          <div class="v-info">
+            <p class="kicker" id="vTag"></p>
+            <h3 class="v-name" id="vName"></h3>
+            <p class="v-line" id="vLine"></p>
+            <ul class="v-notes" id="vNotes"></ul>
+            <div class="v-int" id="vInt"></div>
+            <fieldset class="formats">
+              <legend class="sr">Formato</legend>
+              <label><input type="radio" name="fmt" value="graos" checked><span>Em grãos<small>1 kg</small></span></label>
+              <label><input type="radio" name="fmt" value="po"><span>Moído<small>250 g</small></span></label>
+              <label><input type="radio" name="fmt" value="caps"><span>Cápsulas<small>10 un</small></span></label>
+            </fieldset>
+            <div class="v-buy">
+              <p class="price" id="vPrice"></p>
+              <button class="btn gold" type="button" id="vAdd">Adicionar à sacola</button>
+            </div>
+            <p class="fresh">Torra desta semana · Entrega hoje em até 10&nbsp;km</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Xícaras e canecas -->
+  <section class="sec pecas" id="pecas">
+    <div class="wrap">
+      <header class="sec-head center reveal">
+        <p class="kicker">Para a sua mesa</p>
+        <h2 class="display">Xícaras e canecas à altura do café.</h2>
+        <p class="script">Detalhes em ouro, feitos para durar.</p>
+      </header>
+      <div class="pecas-grid" id="pecasGrid"></div>
+    </div>
+  </section>
+
+  <!-- 4. O salão -->
+  <section class="sec salao" id="salao">
+    <div class="salao-grid">
+      <figure class="salao-img reveal">
+        <img src="assets/img/salao.webp" alt="Vista de cima do salão da Caffè D’oro, com vinte mesas, poltronas de couro, plantas e o balcão de mármore ao fundo." width="1448" height="1086" loading="lazy">
+      </figure>
+      <div class="salao-text reveal">
+        <p class="kicker">O salão</p>
+        <h2 class="display">Um lugar feito para ficar.</h2>
+        <p class="lede">Vinte mesas, luz baixa, poltronas de couro e um balcão de mármore onde o café é tirado na sua frente. Venha para uma conversa longa, uma reunião tranquila ou só para ler em paz.</p>
+        <div class="menu-card">
+          <p class="menu-title">No balcão</p>
+          <ul>
+            <li><span>Espresso</span><i></i><b>R$ 7</b></li>
+            <li><span>Macchiato</span><i></i><b>R$ 8</b></li>
+            <li><span>Cappuccino</span><i></i><b>R$ 10</b></li>
+            <li><span>Latte</span><i></i><b>R$ 14</b></li>
+          </ul>
+          <p class="menu-foot">Doces da casa, feitos todos os dias.</p>
+        </div>
+        <p class="hours">Seg a sáb, 8h às 22h · Dom, 9h às 20h</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Reserva: a planta interativa -->
+  <section class="sec reserva" id="reservar">
+    <div class="wrap">
+      <header class="sec-head split-head reveal">
+        <div>
+          <p class="kicker">Reservas</p>
+          <h2 class="display">Escolha a sua mesa.</h2>
+        </div>
+        <p class="lede">Toque em uma mesa na planta do salão. As douradas estão livres para o dia e o horário que você escolher.</p>
+      </header>
+
+      <div class="res-grid">
+        <div class="plan reveal">
+          <div class="plan-box" id="planBox">
+            <img src="assets/img/planta.webp" alt="Planta do salão vista de cima, com as mesas numeradas de 1 a 20." width="1165" height="870" loading="lazy">
+            <svg class="plan-svg" id="planSvg" viewBox="0 0 1165 870" aria-hidden="true"></svg>
+            <div class="plan-hit" id="planHit"></div>
+          </div>
+          <ul class="legend" aria-label="Legenda">
+            <li><i class="lg free"></i>Livre</li>
+            <li><i class="lg busy"></i>Reservada</li>
+            <li><i class="lg sel"></i>Sua escolha</li>
+          </ul>
+          <p class="plan-chip" id="planChip" aria-live="polite">Nenhuma mesa escolhida ainda.</p>
+        </div>
+
+        <div class="res-panel reveal" id="resPanel">
+          <form class="res-form" id="resForm" novalidate>
+            <p class="panel-title">Sua reserva</p>
+            <div class="f-row">
+              <label class="field"><span>Data</span><input type="date" id="rDate" required></label>
+              <label class="field"><span>Horário</span><select id="rTime" required></select></label>
+            </div>
+            <label class="field"><span>Pessoas</span>
+              <select id="rPeople">
+                <option value="1">1 pessoa</option><option value="2" selected>2 pessoas</option><option value="3">3 pessoas</option><option value="4">4 pessoas</option><option value="5">5 pessoas</option><option value="6">6 pessoas</option><option value="7">7 pessoas</option><option value="8">8 pessoas</option><option value="9">9 pessoas</option><option value="10">10 pessoas</option>
+              </select>
+            </label>
+            <label class="field m-only"><span>Ou escolha pela lista</span><select id="rTableList"></select></label>
+            <label class="field"><span>Seu nome</span><input type="text" id="rName" autocomplete="name" placeholder="Como devemos chamar você" required></label>
+            <label class="field"><span>WhatsApp</span><input type="tel" id="rPhone" autocomplete="tel" inputmode="tel" placeholder="(11) 90000-0000" required></label>
+            <p class="f-msg" id="rMsg" aria-live="polite"></p>
+            <button class="btn gold wide" type="submit" id="rSubmit">Reservar mesa</button>
+            <p class="f-note">Guardamos a mesa por 15 minutos depois do horário.</p>
+          </form>
+          <div class="res-done" id="resDone" hidden tabindex="-1">
+            <svg class="done-ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" pathLength="1"/><path d="M27 41l9 9 17-19" pathLength="1"/></svg>
+            <p class="panel-title" id="doneTitle">Mesa reservada.</p>
+            <p class="done-sum" id="doneSum"></p>
+            <p class="f-note">Isto é uma demonstração. Em um site real, a confirmação chegaria no seu WhatsApp.</p>
+            <button class="btn ghost wide" type="button" id="resAgain">Fazer outra reserva</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Entrega -->
+  <section class="sec entrega" id="entrega">
+    <div class="wrap ent-grid">
+      <div class="radius reveal" aria-hidden="true">
+        <svg viewBox="0 0 520 520" class="radius-svg">
+          <circle class="rg r4" cx="260" cy="260" r="236" pathLength="1"/>
+          <circle class="rg r3" cx="260" cy="260" r="177" pathLength="1"/>
+          <circle class="rg r2" cx="260" cy="260" r="118" pathLength="1"/>
+          <circle class="rg r1" cx="260" cy="260" r="59" pathLength="1"/>
+          <g class="places">
+            <text x="182" y="170">Pinheiros</text>
+            <text x="92" y="118">Vila Madalena</text>
+            <text x="318" y="198">Paulista</text>
+            <text x="352" y="328">Paraíso</text>
+            <text x="296" y="410">Moema</text>
+            <text x="142" y="344">Itaim Bibi</text>
+            <text x="376" y="120">Consolação</text>
+            <text x="190" y="470">Brooklin</text>
+            <text x="412" y="440">Vila Mariana</text>
+            <text x="60" y="262">Butantã</text>
+          </g>
+          <circle class="home-pulse" cx="260" cy="260" r="10"/>
+          <circle class="home" cx="260" cy="260" r="5"/>
+          <text class="home-label" x="274" y="252">Caffè D’oro</text>
+          <text class="km" x="260" y="30">10&nbsp;km</text>
+        </svg>
+      </div>
+      <div class="ent-text reveal">
+        <p class="kicker">Entrega</p>
+        <h2 class="display">Chega fresco. Chega hoje.</h2>
+        <p class="lede">Atendemos até 10&nbsp;km da nossa loja nos Jardins. Pedidos feitos até as 16h saem no mesmo dia, direto da torra para a sua porta.</p>
+        <ol class="steps">
+          <li><b>1</b><span>Escolha seus cafés na loja.</span></li>
+          <li><b>2</b><span>Feche o pedido até as 16h.</span></li>
+          <li><b>3</b><span>Receba em casa no mesmo dia.</span></li>
+        </ol>
+        <form class="cep" id="cepForm" novalidate>
+          <label for="cepIn">Confira seu CEP</label>
+          <div class="cep-row">
+            <input id="cepIn" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9">
+            <button class="btn gold" type="submit">Verificar</button>
+          </div>
+          <p class="cep-out" id="cepOut" aria-live="polite"></p>
+        </form>
+        <p class="f-note">Frete grátis acima de R$ 150. Abaixo disso, R$ 12.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Depoimentos -->
+  <section class="sec provas" id="provas">
+    <div class="wrap">
+      <p class="kicker center reveal">Quem já provou</p>
+      <div class="quotes">
+        <figure class="q reveal"><blockquote>“Chegou em casa com a data de torra de três dias antes. Nunca mais comprei café de mercado.”</blockquote><figcaption>Marina A. · Pinheiros</figcaption></figure>
+        <figure class="q reveal"><blockquote>“Reservei a mesa 11 para um aniversário de dez pessoas. Ninguém veio apressar a conta.”</blockquote><figcaption>Rafael T. · Jardins</figcaption></figure>
+        <figure class="q reveal"><blockquote>“O Geisha é outro mundo. Floral de verdade, sem precisar imaginar.”</blockquote><figcaption>Beatriz L. · Vila Mariana</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Dúvidas -->
+  <section class="sec faq" id="duvidas">
+    <div class="wrap faq-grid">
+      <header class="reveal">
+        <p class="kicker">Dúvidas</p>
+        <h2 class="display">Antes de pedir.</h2>
+      </header>
+      <div class="faq-list reveal">
+        <details><summary>Qual moagem devo escolher?</summary><div class="a"><p>O moído da casa é médio-fino, ideal para coador de papel e cafeteira elétrica. Para espresso ou prensa francesa, leve em grãos e moa na hora: é assim que o aroma dura mais.</p></div></details>
+        <details><summary>As cápsulas servem na minha máquina?</summary><div class="a"><p>A caixa indica o sistema compatível. Se tiver dúvida, chame a gente no WhatsApp com o modelo da sua máquina antes de comprar.</p></div></details>
+        <details><summary>Como sei que o café é fresco?</summary><div class="a"><p>Torramos às segundas e quintas. A data da torra vem impressa em cada pacote, e nada sai daqui com mais de 20 dias.</p></div></details>
+        <details><summary>Até onde vocês entregam?</summary><div class="a"><p>Até 10&nbsp;km da loja, nos Jardins. Coloque seu CEP na seção de entrega para conferir na hora.</p></div></details>
+        <details><summary>Preciso reservar para ir ao salão?</summary><div class="a"><p>Não, mas quem reserva não espera. A mesa fica guardada por 15 minutos depois do horário marcado.</p></div></details>
+        <details><summary>Posso ficar quanto tempo quiser?</summary><div class="a"><p>Pode. A reserva garante 2 horas, e se ninguém estiver esperando pela mesa, ela continua sua.</p></div></details>
+        <details><summary>E se o pedido chegar com algum problema?</summary><div class="a"><p>A gente troca no mesmo dia. Basta mandar uma foto pelo WhatsApp.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Chamada final -->
+  <section class="sec final" id="final">
+    <div class="wrap center reveal">
+      <img class="final-mark" src="assets/img/grao-ouro.webp" alt="" width="120" height="110" loading="lazy">
+      <p class="script">Café é sempre uma boa ideia.</p>
+      <h2 class="display">Sua mesa está esperando.</h2>
+      <div class="cta-row center">
+        <a class="btn gold" href="#reservar">Reservar mesa</a>
+        <a class="btn ghost" href="#cafes">Comprar café</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="assets/img/grao-ouro.webp" alt="" width="54" height="50" loading="lazy">
+      <p class="foot-name">Caffè D’oro</p>
+      <p class="foot-tag">Cafés extraordinários</p>
+    </div>
+    <div>
+      <p class="foot-h">Endereço</p>
+      <p>Alameda dos Cafezais, 180<br>Jardins, São Paulo</p>
+    </div>
+    <div>
+      <p class="foot-h">Horário</p>
+      <p>Seg a sáb, 8h às 22h<br>Dom, 9h às 20h</p>
+    </div>
+    <div>
+      <p class="foot-h">Navegue</p>
+      <p><a href="#cafes">Cafés</a> · <a href="#reservar">Reservas</a> · <a href="#entrega">Entrega</a> · <a href="#duvidas">Dúvidas</a></p>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <p>Caffè D’oro é uma marca fictícia, criada como projeto de portfólio. Reservas e pedidos feitos aqui são demonstrações e não geram cobrança.</p>
+    <p>© 2026 Caffè D’oro</p>
+  </div>
+</footer>
+
+<!-- Sacola -->
+<div class="veil" id="veil" hidden></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" hidden>
+  <div class="dr-head">
+    <p class="dr-title" id="drawerTitle">Sua sacola</p>
+    <button class="icon-btn" type="button" id="drawerClose" aria-label="Fechar sacola"><svg width="22" height="22"><use href="#i-close"/></svg></button>
+  </div>
+  <div class="dr-body" id="drBody">
+    <div class="dr-view" id="viewCart">
+      <ul class="cart-list" id="cartList"></ul>
+      <div class="cart-empty" id="cartEmpty">
+        <img src="assets/img/grao-ouro.webp" alt="" width="64" height="59" loading="lazy">
+        <p>Sua sacola está vazia.</p>
+        <a class="btn ghost" href="#cafes" data-close>Ver os cafés</a>
+      </div>
+    </div>
+    <form class="dr-view co-form" id="viewCheckout" hidden novalidate>
+      <button class="back" type="button" id="coBack"><svg width="18" height="18" style="transform:scaleX(-1)"><use href="#i-arrow"/></svg>Voltar para a sacola</button>
+      <p class="panel-title">Entrega</p>
+      <label class="field"><span>Nome</span><input id="cName" autocomplete="name" required></label>
+      <label class="field"><span>WhatsApp</span><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(11) 90000-0000" required></label>
+      <div class="f-row">
+        <label class="field"><span>CEP</span><input id="cCep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" required></label>
+        <label class="field"><span>Número</span><input id="cNum" inputmode="numeric" required></label>
+      </div>
+      <p class="co-addr" id="cAddr" aria-live="polite"></p>
+      <label class="field"><span>Complemento</span><input id="cComp" placeholder="Apto, bloco (opcional)"></label>
+      <fieldset class="pay">
+        <legend>Pagamento</legend>
+        <label><input type="radio" name="pay" value="Pix" checked><span>Pix</span></label>
+        <label><input type="radio" name="pay" value="Cartão na entrega"><span>Cartão na entrega</span></label>
+      </fieldset>
+      <p class="f-msg" id="cMsg" aria-live="polite"></p>
+    </form>
+    <div class="dr-view co-done" id="viewDone" hidden tabindex="-1">
+      <svg class="done-ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" pathLength="1"/><path d="M27 41l9 9 17-19" pathLength="1"/></svg>
+      <p class="panel-title">Pedido recebido.</p>
+      <p class="done-sum" id="coSum"></p>
+      <p class="f-note">Isto é uma demonstração. Nada foi cobrado nem enviado.</p>
+      <a class="btn ghost wide" href="#cafes" data-close>Continuar na loja</a>
+    </div>
+  </div>
+  <div class="dr-foot" id="drFoot">
+    <dl class="totals">
+      <div><dt>Subtotal</dt><dd id="tSub">R$ 0,00</dd></div>
+      <div><dt>Frete</dt><dd id="tShip">R$ 0,00</dd></div>
+      <div class="grand"><dt>Total</dt><dd id="tTotal">R$ 0,00</dd></div>
+    </dl>
+    <p class="ship-hint" id="shipHint"></p>
+    <button class="btn gold wide" type="button" id="drMain">Finalizar pedido</button>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/site.js" defer></script>
+</body>
+</html>

@@ -1753,7 +1753,7 @@ void main(){
       const r = await api('/club', { method: 'POST', body: { email: v, lang: LANG, website: $('#clubForm .hp').value } });
       clubName = v.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).slice(0, 24);
       $('#ccName').textContent = clubName;
-      clubKey = r.fresh ? 'club.ok' : 'club.again';
+      clubKey = r.fresh ? (r.mail ? 'club.ok' : 'club.okNoMail') : 'club.again';
       msg.className = 'f-msg ok'; msg.textContent = t(clubKey);
       clubCard.animate?.([{ transform: 'rotateX(8deg) rotateY(-14deg) scale(1)' }, { transform: 'rotateX(0deg) rotateY(180deg) scale(1.04)' }, { transform: 'rotateX(8deg) rotateY(346deg) scale(1)' }], { duration: RM.matches ? 0 : 1100, easing: 'cubic-bezier(.65,0,.35,1)' });
     } catch (err) {

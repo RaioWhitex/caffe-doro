@@ -135,7 +135,7 @@ async function queueMail(kind: 'reservation' | 'club', ref: string) {
   return true;
 }
 
-/* ---------------- CEP lookup (server side, so the page never calls third parties) ---------------- */
+/* ---------------- CEP lookup (backup for the page, and the delivery check for orders) ---------------- */
 function km(a: { lat: number; lon: number }, b: { lat: number; lon: number }) {
   const R = 6371, rad = (x: number) => x * Math.PI / 180, dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
   const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
@@ -320,8 +320,8 @@ async function club(req: Request, body: any) {
   const { error } = await db.from('club_members').insert({ email: mail, lang: lang(body.lang) });
   if (error && error.code !== '23505') throw new HttpError(500, 'db_error');
   const fresh = !error;
-  if (fresh) await queueMail('club', mail);
-  return { ok: true, fresh };
+  const mailed = fresh ? await queueMail('club', mail) : false;
+  return { ok: true, fresh, mail: mailed };
 }
 
 // called by the Google Apps Script that sends from Gmail: it proves nothing by itself,

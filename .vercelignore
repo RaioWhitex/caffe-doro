@@ -1,0 +1,6 @@
+.env*
+.vercel
+supabase
+apps-script
+*.md
+/index.html

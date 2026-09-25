@@ -1,0 +1,6 @@
+Contact: https://wa.me/5511933914350
+Contact: https://github.com/RaioWhitex/caffe-doro/security/advisories/new
+Expires: 2027-09-25T00:00:00.000Z
+Preferred-Languages: pt, en
+Canonical: https://caffedoro-shinnare.vercel.app/.well-known/security.txt
+Policy: https://github.com/RaioWhitex/caffe-doro/blob/main/SECURITY.md

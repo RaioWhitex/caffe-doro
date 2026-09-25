@@ -22,8 +22,27 @@
   const FINE = matchMedia('(pointer: fine)').matches && matchMedia('(hover: hover)').matches;
   const digits = s => (s || '').replace(/\D/g, '');
   const pad2 = n => String(n).padStart(2, '0');
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const WA_CAFE = '5511933914350';                          // the café's WhatsApp in this demo
+  const waLink = (num, text) => `https://wa.me/${num}?text=${encodeURIComponent(text)}`;
   root.classList.toggle('reduced', RM.matches);
+
+  // every call goes to our own origin (/api is proxied to the server), so the page talks to no third party
+  async function api(path, { method = 'GET', body, timeout = 15000 } = {}) {
+    const ctrl = new AbortController(), tm = setTimeout(() => ctrl.abort(), timeout);
+    try {
+      const r = await fetch('/api' + path, {
+        method, signal: ctrl.signal, credentials: 'omit', cache: 'no-store',
+        headers: body ? { 'content-type': 'application/json' } : undefined, body: body ? JSON.stringify(body) : undefined,
+      });
+      let data = null; try { data = await r.json(); } catch { /* empty body */ }
+      if (!r.ok) { const e = new Error((data && data.error) || 'http_' + r.status); e.status = r.status; e.code = (data && data.error) || 'generic'; throw e; }
+      return data;
+    } catch (e) {
+      if (!e.status) e.code = 'offline';
+      throw e;
+    } finally { clearTimeout(tm); }
+  }
 
   /* ================= language ================= */
   const DICT = window.I18N || { pt: {}, en: {} };
@@ -52,6 +71,7 @@
       const s = document.createElement('span');
       s.className = 'w'; s.textContent = w;
       s.style.setProperty('--th', ((i / Math.max(1, n - 1)) * 0.5 + r() * 0.05).toFixed(3));
+      s.style.setProperty('--i', i);
       if (el.dataset.fx === 'part') s.style.setProperty('--dir', i < n / 2 ? -1 : 1);
       vis.appendChild(s); i++;
       if (wi < words.length - 1 && words[wi + 1] !== '/') vis.appendChild(document.createTextNode(' '));
@@ -129,11 +149,9 @@
   langHooks.push(syncTheme);
 
   /* ================= hero: layered scenes scrubbed by scroll ================= */
-  const hero = $('.hero'), stage = $('#stage'), logoWrap = $('#logoWrap'), sD = $('#sD'), cue = $('#cue');
+  const hero = $('.hero'), stage = $('#stage'), logoWrap = $('#logoWrap'), sD = $('#sD'), cue = $('#cue'), burstBg = $('#burstBg');
   const ramos = $$('.ramo');
   const bags = $$('.bag').map(el => ({ el, i: +el.dataset.i, t: '', o: '' }));
-  const hbs = $$('.hb').filter(el => !(LITE && el.classList.contains('x-lite')))
-    .map(el => ({ el, x: +el.dataset.x, y: +el.dataset.y, z: +el.dataset.z, r: +el.dataset.r, t: '', o: '' }));
   const bands = $$('.band').map(el => ({ el, a: +el.dataset.a, b: +el.dataset.b, op: -1, k: -1, vis: null, done: null, first: el.classList.contains('b1'), last: el.classList.contains('b4') }));
   bags.forEach(b => { b.el.style.zIndex = String(10 - Math.abs(b.i)); });
 
@@ -161,22 +179,19 @@
     docH = 0;
     portrait = matchMedia('(max-aspect-ratio: 4/5)').matches;
     const c = bags.find(b => b.i === 0); bw = c ? c.el.offsetWidth : 200;
+    burst.resize(); embers.resize();
   }
   const heroProgress = () => clamp((scrollY - heroTop) / heroRange, 0, 1);
 
   function renderScenes(p) {
-    // A: the golden bean; the camera pushes in and loose beans fly past
+    // A: the golden bean; scrolling sets off an explosion of coffee and gold beans (drawn by `burst`)
     const tA = ss(p, 0.1, 0.26);
     put(logoWrap, 'transform', `scale(${(1 + 2.9 * tA * tA).toFixed(4)})`);
     put(logoWrap, 'opacity', (1 - ss(p, 0.15, 0.23)).toFixed(3));
-    const push = ss(p, 0.03, 0.27), beanFade = 1 - ss(p, 0.19, 0.27);
-    const yk = portrait ? 0.5 : 1;                     // on tall screens keep beans out of the text bands
-    hbs.forEach(b => {
-      const k = 1 + push * push * b.z * 2.6;
-      const tr = `translate3d(${(b.x * k * vw / 100).toFixed(1)}px,${(b.y * yk * k * vh / 100).toFixed(1)}px,0) rotate(${(b.r + push * 70 * Math.sign(b.x)).toFixed(1)}deg) scale(${(1 + push * push * b.z * 1.6).toFixed(3)})`;
-      if (tr !== b.t) { b.t = tr; b.el.style.transform = tr; }
-      const o = beanFade.toFixed(3); if (o !== b.o) { b.o = o; b.el.style.opacity = o; }
-    });
+    const E = burstE(p);
+    put(burstBg, 'transform', `translate(-50%,-50%) scale(${(0.72 + E * 1.9).toFixed(4)})`);
+    put(burstBg, 'opacity', (Math.max(0.16 * loadK, ss(E, 0, 0.12) * 0.95) * (1 - ss(E, 0.45, 0.92))).toFixed(3));
+    burst.kick();
     // B: branches part in from both edges, then pass upward
     const enter = easeOut(ss(p, 0.13, 0.3)), exit = ss(p, 0.4, 0.5), fade = ss(p, 0.13, 0.2) * (1 - exit);
     const [r1, r2, r3] = ramos;
@@ -201,8 +216,11 @@
     const tD = ss(p, 0.77, 0.9);
     put(sD, 'opacity', tD.toFixed(3));
     put(sD, 'transform', `translate3d(0,${((1 - tD) * 0.06 * vh).toFixed(1)}px,0) scale(${(1.16 - 0.16 * easeOut(tD)).toFixed(4)})`);
+    settleFx(tD > 0.01 && heroOn);
+    if (p > 0.5) settleFilm.prime();
     cue.classList.toggle('gone', p > 0.02);
   }
+  const burstE = p => clamp((p - 0.02) / 0.25, 0, 1);
   function renderBands(p) {
     bands.forEach(bd => {
       const { a, b } = bd, f = Math.min(0.035, (b - a) / 4);
@@ -248,9 +266,9 @@
   const GATES = ['(orientation: landscape) and (pointer: coarse) and (max-height: 560px)', '(prefers-reduced-motion: reduce)'];
   const MQLS = GATES.map(q => matchMedia(q));
   function clearInline() {
-    [logoWrap, sD, ...ramos, ...bags.map(b => b.el), ...hbs.map(b => b.el)].forEach(el => { el.style.transform = ''; el.style.opacity = ''; });
+    [logoWrap, sD, burstBg, ...ramos, ...bags.map(b => b.el)].forEach(el => { el.style.transform = ''; el.style.opacity = ''; });
     bands.forEach(bd => { bd.el.style.opacity = ''; bd.el.style.visibility = ''; ['--k', '--ks', '--kb', '--kc0'].forEach(v => bd.el.style.removeProperty(v)); bd.el.classList.remove('done'); });
-    cache.clear(); bags.forEach(b => { b.t = ''; b.o = ''; }); hbs.forEach(b => { b.t = ''; b.o = ''; });
+    cache.clear(); bags.forEach(b => { b.t = ''; b.o = ''; });
   }
   function enableScrub() {
     if (scrubOn) return; scrubOn = true;
@@ -271,12 +289,192 @@
   new IntersectionObserver(es => es.forEach(e => {
     heroOn = e.isIntersecting; hero.classList.toggle('live', heroOn);
     if (heroOn && scrubOn) onHeroScroll();
+    if (!scrubOn) settleFx(heroOn && !RM.matches);
+    burst.kick();
   })).observe(hero);
+
+  /* ---------- the gold explosion: beans burst out of the logo and crumble into gold dust ----------
+     Everything is a pure function of scroll progress, so scrolling back rebuilds the beans. */
+  const burst = (() => {
+    const cv = $('#burst');
+    if (!cv) return { kick() {}, resize() {} };
+    const ctx = cv.getContext('2d');
+    const load = src => { const im = new Image(); im.decoding = 'async'; im.src = src; return im; };
+    const SHARP = [1, 2, 3, 4, 5, 6, 7, 8].map(i => load(`assets/img/gb-${i}.webp`));
+    const SOFT = [1, 2, 3, 4].map(i => load(`assets/img/gbb-${i}.webp`));
+    const TAU = Math.PI * 2, R = rng(20260925);
+    // beans already floating around the logo before the scroll: x, y in % of the screen, depth, angle
+    const HOME = [[-40, -30, 1.6, -28], [36, -24, 1, 32], [-26, 22, 0.6, 12], [42, 30, 1.8, 50], [18, -36, 0.5, -60], [-44, 6, 1.1, 80], [30, 6, 0.7, -10], [-12, 38, 0.8, 140]];
+    const beans = [];
+    HOME.forEach(([x, y, z, r], i) => {
+      if (LITE && i > 5) return;
+      beans.push({ home: true, sx: x / 100, sy: y / 100, a: Math.atan2(y, x), sp: 0.45 + z * 0.35, z, rot: r * Math.PI / 180, spin: (R() - 0.5) * 5, t0: 0, img: i % 8, ph: R() * TAU });
+    });
+    for (let i = 0, n = LITE ? 20 : 46; i < n; i++) {
+      beans.push({ home: false, sx: (R() - 0.5) * 0.04, sy: (R() - 0.5) * 0.04, a: R() * TAU, sp: 0.35 + R() * 1.05, z: 0.35 + Math.pow(R(), 1.6) * 1.8, rot: R() * TAU, spin: (R() - 0.5) * 8, t0: R() * 0.32, img: Math.floor(R() * 8), ph: R() * TAU });
+    }
+    const dust = [];
+    for (let i = 0, n = LITE ? 220 : 620; i < n; i++) {
+      dust.push({ a: R() * TAU, sp: 0.12 + Math.pow(R(), 0.7) * 1.25, s: 0.6 + R() * 2.2, gold: R() < 0.56, t0: R() * 0.3, tw: R() * TAU, curl: (R() - 0.5) * 0.7 });
+    }
+    let W = 0, H = 0, dpr = 1, raf = null, cleared = true, goAt = 0;
+    function resize() {
+      dpr = Math.min(devicePixelRatio || 1, LITE ? 1 : 1.75);
+      W = stage.clientWidth; H = stage.clientHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      cleared = false; kick();
+    }
+    const running = () => scrubOn && heroOn && shown < 0.3 && !document.hidden && !RM.matches;
+    function sprite(b, x, y, size, rot, alpha) {
+      const set = b.z > 1.45 && !LITE ? SOFT : SHARP, im = set[b.img % set.length];
+      if (!im.complete || !im.naturalWidth || alpha < 0.01) return;
+      const h = size, w = h * im.naturalWidth / im.naturalHeight, c = Math.cos(rot) * dpr, s = Math.sin(rot) * dpr;
+      ctx.setTransform(c, s, -s, c, x * dpr, y * dpr);
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(im, -w / 2, -h / 2, w, h);
+    }
+    function draw(time) {
+      const p = shown, E = burstE(p);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      if (p >= 0.3) { cleared = true; return; }
+      cleared = false;
+      const cx = W / 2, cy = H * 0.47, U = Math.max(W, H) * 0.55, yk = portrait ? 0.55 : 1;
+      const base = clamp(W * 0.054, 44, 84) * (portrait ? 1.25 : 1);
+      const intro = goAt ? easeOut(clamp((time - goAt - 0.6) / 1.4, 0, 1)) : 0;
+      // flash at the moment of the burst
+      const flash = ss(E, 0, 0.07) * (1 - ss(E, 0.12, 0.42));
+      if (flash > 0.01) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 1;
+        const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, U * 0.9);
+        g.addColorStop(0, `rgba(255,214,140,${(0.55 * flash).toFixed(3)})`); g.addColorStop(0.35, `rgba(214,150,60,${(0.22 * flash).toFixed(3)})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      // coffee grounds and gold glitter spraying out
+      if (E > 0) {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        for (const d of dust) {
+          const e = clamp((E - d.t0) / (1 - d.t0), 0, 1); if (e <= 0) continue;
+          const k = 1 - Math.pow(1 - e, 2.8), r = k * d.sp * U * (1 + e * 0.5), a = d.a + d.curl * e;
+          const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r * yk + e * e * U * 0.06;
+          let al = ss(e, 0, 0.04) * (1 - ss(e, 0.55, 1));
+          if (al < 0.02) continue;
+          const sz = d.s * (1 + e * 1.4);
+          if (d.gold) { al *= 0.55 + 0.45 * Math.sin(time * 9 + d.tw); ctx.fillStyle = `rgba(255,${200 + (d.tw * 8 | 0) % 40},120,${al.toFixed(3)})`; }
+          else ctx.fillStyle = `rgba(${86 + (d.tw * 10 | 0) % 40},${46 + (d.tw * 6 | 0) % 20},18,${(al * 0.9).toFixed(3)})`;
+          ctx.fillRect(x - sz / 2, y - sz / 2, sz, sz);
+        }
+      }
+      // the beans: fly outward and toward the camera, then crumble into gold dust
+      const order = beans.slice().sort((a, b) => a.z - b.z);
+      for (const b of order) {
+        const e = clamp((E - b.t0) / (1 - b.t0), 0, 1);
+        if (!b.home && e <= 0) continue;
+        const pos = ee => {
+          const k = 1 - Math.pow(1 - ee, 2.4), persp = 1 + ee * ee * b.z * 1.7;
+          const bob = b.home ? Math.sin(time * 1.1 + b.ph) * 6 * (1 - ee) : 0;
+          return [cx + (b.sx * W + Math.cos(b.a) * k * b.sp * U) * persp, cy + (b.sy * H * yk + Math.sin(b.a) * k * b.sp * U * yk) * persp + bob + ee * ee * U * 0.05, persp];
+        };
+        const [x, y, persp] = pos(e);
+        const rot = b.rot + b.spin * e + (b.home ? Math.sin(time * 0.7 + b.ph) * 0.07 * (1 - e) : 0);
+        const size = base * (0.55 + b.z * 0.55) * persp * (b.home ? 1 : 0.9);
+        const crumble = 1 - ss(e, 0.42, 0.9);
+        const alpha = (b.home ? intro : ss(e, 0, 0.05)) * crumble;
+        if (!LITE && e > 0.02 && e < 0.7) {                     // motion trail
+          for (let g = 1; g <= 2; g++) { const [gx, gy, gp] = pos(Math.max(0, e - g * 0.035)); sprite(b, gx, gy, base * (0.55 + b.z * 0.55) * gp, rot - b.spin * g * 0.03, alpha * (0.28 / g)); }
+        }
+        sprite(b, x, y, size, rot, alpha);
+        if (e > 0.3 && e < 1) {                                 // the crumbling: gold specks shed along the path
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.globalAlpha = 1;
+          for (let k = 1; k <= (LITE ? 3 : 6); k++) {
+            const ee = Math.max(0, e - k * 0.028), [tx, ty] = pos(ee), j = hash(b.ph + ':' + k) / 4294967296;
+            const al = (1 - k / 7) * ss(e, 0.3, 0.55) * (1 - ss(e, 0.85, 1)) * 0.9;
+            ctx.fillStyle = `rgba(255,${210 + (j * 40 | 0)},${120 + (j * 60 | 0)},${al.toFixed(3)})`;
+            const sz = 1.2 + j * 2.4 * persp;
+            ctx.fillRect(tx + (j - 0.5) * size * 0.6, ty + (hash(k + ':' + b.ph) / 4294967296 - 0.5) * size * 0.6, sz, sz);
+          }
+        }
+      }
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1;
+    }
+    function frame(now) {
+      raf = null;
+      if (!running()) { if (!cleared) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); cleared = true; } return; }
+      draw(now / 1000);
+      raf = requestAnimationFrame(frame);
+    }
+    function kick() { if (!raf && W && (running() || !cleared)) raf = requestAnimationFrame(frame); }
+    return { kick, resize, go() { goAt = performance.now() / 1000; kick(); } };
+  })();
+
+  /* ---------- the settle band: a film at the counter, gold embers, light sweeping by ---------- */
+  const settleFilm = (() => {
+    const vids = [$('#sdVidLand'), $('#sdVidPort')].filter(Boolean);
+    const want = () => (matchMedia('(max-aspect-ratio: 4/5)').matches ? vids[1] : vids[0]);
+    let primed = false, on = false;
+    function source(v) {
+      if (!v || v.dataset.loaded) return;
+      v.dataset.loaded = '1';
+      const base = v.dataset.src;
+      const m = document.createElement('source'); m.src = base + '.mp4'; m.type = 'video/mp4'; v.appendChild(m);
+      v.addEventListener('playing', () => v.classList.add('on'));
+      v.load();
+    }
+    function sync() {
+      vids.forEach(v => {
+        const active = on && v === want();
+        if (active) { source(v); const p = v.play(); if (p) p.catch(() => {}); } else if (!v.paused) v.pause();
+      });
+    }
+    addEventListener('resize', () => { if (on) sync(); });
+    return {
+      prime() { if (!primed && !RM.matches) { primed = true; source(want()); } },
+      set(v) { if (v === on) return; on = v && !RM.matches; sync(); },
+    };
+  })();
+  const embers = (() => {
+    const cv = $('#embers');
+    if (!cv) return { set() {}, resize() {} };
+    const ctx = cv.getContext('2d');
+    const glow = document.createElement('canvas'); glow.width = glow.height = 32;
+    { const g = glow.getContext('2d'), gr = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+      gr.addColorStop(0, 'rgba(255,236,190,1)'); gr.addColorStop(0.25, 'rgba(255,196,110,.8)'); gr.addColorStop(1, 'rgba(255,160,60,0)');
+      g.fillStyle = gr; g.fillRect(0, 0, 32, 32); }
+    const N = LITE ? 26 : 60;
+    const P = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), s: 3 + Math.random() * 9, v: 0.012 + Math.random() * 0.05, ph: Math.random() * 6.3, z: 0.4 + Math.random() }));
+    let W = 0, H = 0, dpr = 1, raf = null, on = false, last = 0, mx = 0, my = 0;
+    function resize() { dpr = Math.min(devicePixelRatio || 1, 1.5); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+    addEventListener('pointermove', e => { if (!on) return; mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+    function frame(now) {
+      raf = null; if (!on || document.hidden) { last = 0; return; }
+      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
+      if (!W) resize();
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      for (const p of P) {
+        p.y -= p.v * dt * p.z; p.x += Math.sin(now / 1000 * 0.8 + p.ph) * 0.0006 * p.z;
+        if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
+        const fl = 0.45 + 0.55 * Math.sin(now / 1000 * (2 + p.z * 3) + p.ph), a = fl * ss(p.y, 0, 0.25) * (1 - ss(p.y, 0.8, 1.05) * 0.6);
+        const x = p.x * W - mx * 40 * p.z, y = p.y * H - my * 30 * p.z, s = p.s * p.z;
+        ctx.globalAlpha = a * 0.85; ctx.drawImage(glow, x - s, y - s, s * 2, s * 2);
+      }
+      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+      raf = requestAnimationFrame(frame);
+    }
+    return {
+      resize,
+      set(v) { on = v && !RM.matches; if (on && !raf) raf = requestAnimationFrame(frame); if (!on) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); } },
+    };
+  })();
+  let settleOn = null;
+  function settleFx(v) { if (v === settleOn) return; settleOn = v; settleFilm.set(v); embers.set(v); }
 
   /* ================= intro (project presentation) ================= */
   const intro = $('#intro');
   function go() {
     root.classList.add('go');
+    burst.go();
     if (scrubOn) { loadStart = 0; requestAnimationFrame(loadRamp); }
     setTimeout(loadDeferred, 900);
   }
@@ -285,7 +483,7 @@
     behind.forEach(el => { el.inert = true; });
     const enterBtn = $('#introEnter');
     setTimeout(() => enterBtn.focus({ preventScroll: true }), 900);
-    const assets = ['assets/img/logo-s.webp', 'assets/img/grao-ouro.webp', 'assets/img/bean-1.webp', 'assets/img/bean-2b.webp', 'assets/img/bean-3.webp', 'assets/img/bean-4b.webp',
+    const assets = ['assets/img/logo-s.webp', 'assets/img/grao-ouro.webp', 'assets/img/explosao.webp', 'assets/img/gb-1.webp', 'assets/img/gb-2.webp', 'assets/img/gb-3.webp', 'assets/img/gbb-1.webp',
       innerWidth > 1000 ? 'assets/img/servido.webp' : 'assets/img/servido-m.webp', 'assets/img/xicara-ritual.webp'];
     let done = 0; const total = assets.length + 1;
     const bump = () => {
@@ -533,19 +731,20 @@
 
   /* ================= the ritual: hold to pour ================= */
   const rit = (() => {
-    const stageEl = $('#ritStage'), cupEl = $('#ritCup'), cv = $('#ritCanvas'), ctx = cv.getContext('2d');
+    const stageEl = $('#ritStage'), rigEl = $('#ritRig'), cupEl = $('#ritCup'), cv = $('#ritCanvas'), ctx = cv.getContext('2d');
     const hold = $('#ritHold'), ringC = $('#holdRing'), label = $('#holdLabel'), mlEl = $('#ritMl'), doneEl = $('#ritDone'), again = $('#ritAgain');
     hold.dataset.cursor = 'hold';
     let W = 0, H = 0, cup = { cx: 0, cy: 0, rx: 0, ry: 0, s: 1 };
     let fill = 0, crema = 0, pouring = false, sTop = 0, sBot = 0, raf = null, last = 0, time = 0, visible = false, full = false, busy = false;
     let ripples = [], drops = [], rippleT = 0, dropT = 0, swirl = 0, uiT = 0;
+    // layout sizes, not screen boxes: the rig may be mid-slide when this runs
     function measureRit() {
-      const r = stageEl.getBoundingClientRect(); if (!r.width) return;
+      if (!stageEl.clientWidth) return;
       const dpr = Math.min(devicePixelRatio || 1, LITE ? 1.5 : 2);
-      W = r.width; H = r.height;
+      W = stageEl.clientWidth; H = stageEl.clientHeight;
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const c = cupEl.getBoundingClientRect(), s = c.width / 1254;
-      cup = { cx: c.left - r.left + 622 * s, cy: c.top - r.top + 280 * s, rx: 322 * s, ry: 50 * s, s };
+      const s = cupEl.offsetWidth / 1254;
+      cup = { cx: cupEl.offsetLeft + 622 * s, cy: cupEl.offsetTop + 280 * s, rx: 322 * s, ry: 50 * s, s };
       draw();
     }
     const surf = f => { const e = easeOut(f); return { cy: cup.cy + (1 - e) * 72 * cup.s + 8 * cup.s * e, rx: cup.rx * (0.7 + 0.24 * e), ry: cup.ry * (0.66 + 0.24 * e) }; };
@@ -669,14 +868,15 @@
       pouring = false; full = true; hold.classList.remove('on');
       stageEl.classList.add('full'); doneEl.hidden = false; ui();
     }
+    // the served cup slides away with its coffee (cup and canvas share one rig), a clean one slides in
     function reset() {
-      busy = true; cupEl.classList.add('away');
+      busy = true; rigEl.classList.add('away');
       setTimeout(() => {
         fill = 0; crema = 0; full = false; ripples = []; drops = []; sTop = sBot = 0;
-        stageEl.classList.remove('full'); doneEl.hidden = true;
-        cupEl.classList.remove('away'); cupEl.classList.add('enter');
         draw(); ui();
-        requestAnimationFrame(() => requestAnimationFrame(() => { cupEl.classList.remove('enter'); }));
+        stageEl.classList.remove('full'); doneEl.hidden = true;
+        rigEl.classList.remove('away'); rigEl.classList.add('enter');
+        requestAnimationFrame(() => requestAnimationFrame(() => { rigEl.classList.remove('enter'); }));
         setTimeout(() => { busy = false; measureRit(); hold.focus(); }, 900);
       }, 650);
     }
@@ -697,6 +897,110 @@
     return { measure: measureRit, pinFull, unpin() { again.hidden = false; } };
   })();
   addEventListener('resize', () => { clearTimeout(rit._t); rit._t = setTimeout(rit.measure, 180); });
+
+  /* ================= the coffee ocean: liquid gold that swells and ripples under your hand ================= */
+  (() => {
+    const sec = $('#oceano'), cv = $('#ocGl');
+    if (!sec || !cv || RM.matches) return;
+    const opts = { antialias: false, alpha: false, depth: false, stencil: false, powerPreference: 'low-power', preserveDrawingBuffer: false };
+    const gl = cv.getContext('webgl', opts);
+    if (!gl) return;
+    const OCT = LITE ? 3 : 5, NR = 10;
+    const VS = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
+    const FS = `precision highp float;
+uniform sampler2D T;uniform vec2 res;uniform float time,rot,texA,scroll;uniform vec4 rip[${NR}];varying vec2 v;
+float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n2(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),u.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),u.x),u.y);}
+float fbm(vec2 p){float s=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<${OCT};i++){s+=a*n2(p);p=m*p;a*=.5;}return s;}
+float H(vec2 p){
+  float t=time,h=sin(dot(p,vec2(1.4,.6))*3.1-t*.9)*.1+sin(dot(p,vec2(-.7,1.3))*4.3+t*.7)*.06;
+  h+=(fbm(p*2.2+vec2(t*.06,-t*.04))-.5)*.34;
+  for(int i=0;i<${NR};i++){vec4 r=rip[i];float age=t-r.z;if(r.w>0.&&age>0.&&age<4.5){float d=length(p-r.xy),f=age*.42;h+=sin((d-f)*36.)*exp(-abs(d-f)*8.)*r.w*exp(-age*1.05)*.16;}}
+  return h;}
+vec2 cover(vec2 uv){float A=res.x/res.y,TA=rot>.5?1./texA:texA;vec2 s=uv-.5;if(A>TA)s.y*=TA/A;else s.x*=A/TA;s*=.9;s+=.5;if(rot>.5)s=vec2(s.y,1.-s.x);return s;}
+void main(){
+  vec2 asp=vec2(res.x/res.y,1.),p=v*asp;float e=2./res.y;
+  float h=H(p),hx=H(p+vec2(e,0.)),hy=H(p+vec2(0.,e));
+  vec3 n=normalize(vec3(-(hx-h)/e*.022,-(hy-h)/e*.022,1.));
+  vec2 flow=vec2(fbm(p*1.3+time*.05),fbm(p*1.3+vec2(4.2,1.7)-time*.045))-.5;
+  vec2 uv=v+flow*.07+n.xy*.05+vec2(0.,scroll*.1);
+  vec2 tu=cover(uv);tu=abs(mod(tu+1.,2.)-1.);
+  vec3 c=texture2D(T,tu).rgb;
+  vec3 L=normalize(vec3(-.35,.55,.75)),Hv=normalize(L+vec3(0,0,1));
+  float sp=pow(max(dot(n,Hv),0.),90.)*1.05+pow(max(dot(n,normalize(vec3(.5,-.3,.8)+vec3(0,0,1))),0.),28.)*.22;
+  c*=.9+.28*dot(n,L);
+  c+=vec3(1.,.92,.76)*sp;
+  vec2 g=floor(v*res/3.);float r=h1(g),tw=sin(time*(2.+r*6.)+r*40.)*.5+.5;
+  c+=vec3(1.,.88,.58)*step(.986,r)*pow(tw,8.)*smoothstep(.2,.9,dot(n,Hv)+.4)*1.1;
+  gl_FragColor=vec4(c,1.);}`;
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
+    const vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS);
+    if (!vs || !fs) return;
+    const pr = gl.createProgram(); gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+    if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return;
+    gl.useProgram(pr);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const U = n => gl.getUniformLocation(pr, n);
+    const uRes = U('res'), uTime = U('time'), uRot = U('rot'), uTexA = U('texA'), uScroll = U('scroll'), uRip = U('rip');
+    const tex = gl.createTexture();
+    let ready = false, visible = false, raf = null, t0 = performance.now(), W = 0, H = 0, skip = false;
+    const rips = new Float32Array(NR * 4); let ri = 0, lastRip = 0, lastPt = null, auto = 0;
+    const img = new Image(); img.decoding = 'async';
+    img.onload = () => {
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+      gl.uniform1f(uTexA, img.naturalWidth / img.naturalHeight);
+      ready = true; sec.classList.add('gl'); kick();
+    };
+    function size() {
+      const scale = LITE ? 0.5 : Math.min(devicePixelRatio || 1, 1.5) * 0.7;
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = Math.max(2, Math.round(W * scale)); cv.height = Math.max(2, Math.round(H * scale));
+      gl.viewport(0, 0, cv.width, cv.height);
+      gl.uniform2f(uRes, cv.width, cv.height);
+      gl.uniform1f(uRot, W > H ? 1 : 0);            // landscape screens turn the tall photo sideways: more detail, less zoom
+    }
+    const now = () => (performance.now() - t0) / 1000;
+    function ripple(x, y, amp) {                       // x, y in the shader's space (x scaled by aspect, y up)
+      rips.set([x, y, now(), amp], ri * 4); ri = (ri + 1) % NR;
+    }
+    function frame() {
+      raf = null;
+      if (!visible || !ready || document.hidden) return;
+      raf = requestAnimationFrame(frame);
+      if (LITE && (skip = !skip)) return;            // half rate on simple devices
+      const t = now();
+      if (t - auto > 2.6) { auto = t; ripple(Math.random() * W / H, 0.2 + Math.random() * 0.6, 0.45); }
+      const r = sec.getBoundingClientRect();
+      gl.uniform1f(uScroll, clamp(-r.top / Math.max(1, r.height), -1, 1));
+      gl.uniform1f(uTime, t);
+      gl.uniform4fv(uRip, rips);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (!sec.classList.contains('ready')) sec.classList.add('ready');
+    }
+    function kick() { if (!raf && visible && ready) raf = requestAnimationFrame(frame); }
+    function point(e, strong) {
+      const r = cv.getBoundingClientRect(); if (!r.width) return;
+      const x = (e.clientX - r.left) / r.width, y = 1 - (e.clientY - r.top) / r.height;
+      const t = performance.now();
+      if (!strong && (t - lastRip < 70 || (lastPt && Math.hypot(e.clientX - lastPt[0], e.clientY - lastPt[1]) < 18))) return;
+      lastRip = t; lastPt = [e.clientX, e.clientY];
+      ripple(x * r.width / r.height, y, strong ? 1.3 : 0.7);
+    }
+    sec.addEventListener('pointermove', e => point(e, false), { passive: true });
+    sec.addEventListener('pointerdown', e => point(e, true), { passive: true });
+    cv.addEventListener('webglcontextlost', e => { e.preventDefault(); ready = false; sec.classList.remove('gl', 'ready'); });
+    new IntersectionObserver(es => es.forEach(e => {
+      visible = e.isIntersecting;
+      if (visible) { if (!img.src) img.src = 'assets/img/oceano.webp'; size(); kick(); }
+    }), { rootMargin: '15% 0px' }).observe(sec);
+    addEventListener('resize', () => { if (visible) size(); });
+    document.addEventListener('visibilitychange', kick);
+  })();
 
   /* ================= shop data ================= */
   const V = [
@@ -751,7 +1055,7 @@
   function cardHTML(it, i) {
     if (it.kind === 'coffee') {
       const v = it.v, name = coffeeName(v);
-      return `<article class="card" style="--halo:${v.halo};--sw:${v.sw}" data-i="${i}">
+      return `<article class="card" data-i="${i}">
         <button class="card-hit" type="button" data-cursor="view" aria-label="${esc(t('card.view', { name }))}"></button>
         <div class="card-img"><img src="${imgOf(v.id, it.fmt)}" alt="" width="640" height="744" loading="lazy" decoding="async"></div>
         <div class="card-body"><p class="card-tag">${esc(t('v.' + v.id + '.tag'))}</p><h3><span class="sw"></span>${v.name}</h3>
@@ -771,6 +1075,7 @@
     gridItems = itemsOf(cat);
     grid.classList.remove('show', 'settled');
     grid.innerHTML = gridItems.map(cardHTML).join('');
+    $$('.card', grid).forEach((c, i) => { const it = gridItems[i]; if (it.kind === 'coffee') { c.style.setProperty('--halo', it.v.halo); c.style.setProperty('--sw', it.v.sw); } });
     grid.setAttribute('aria-labelledby', 'chip-' + cat);
     if (gridSeen) { void grid.offsetWidth; grid.classList.add('show'); }
     clearTimeout(settleT); settleT = setTimeout(() => grid.classList.add('settled'), 1300);
@@ -885,8 +1190,13 @@
   langHooks.push(() => { if (qs && !qv.hidden) qvRender(false); });
 
   /* ================= bag and checkout ================= */
-  let cart = store.get('cdo-bag-v2', []); if (!Array.isArray(cart)) cart = [];
-  let coupon = store.get('cdo-coupon', '');
+  // the saved bag is only trusted after it matches the catalog again
+  const validItem = it => it && Number.isInteger(it.qty) && it.qty >= 1 && it.qty <= 20 && (
+    (it.kind === 'coffee' && V.some(v => v.id === it.id) && FMTS.includes(it.fmt) && GRINDS.includes(it.grind) && (it.buy === 'once' || it.buy === 'sub')) ||
+    (it.kind === 'piece' && PIECES.some(p => p.id === it.id)));
+  let cart = store.get('cdo-bag-v2', []);
+  cart = Array.isArray(cart) ? cart.filter(validItem).slice(0, 30).map(({ kind, id, fmt, grind, buy, qty }) => (kind === 'coffee' ? { kind, id, fmt, grind, buy, qty } : { kind, id, qty })) : [];
+  let coupon = store.get('cdo-coupon', '') === 'BEMVINDO' ? 'BEMVINDO' : '';
   const drawer = $('#drawer'), bagBtn = $('#bagBtn'), bagCount = $('#bagCount'), drMain = $('#drMain'), drBack = $('#drBack');
   const views = { cart: $('#vCart'), ship: $('#vShip'), pay: $('#vPay'), done: $('#vDone') };
   const ORDER = ['cart', 'ship', 'pay', 'done'];
@@ -928,7 +1238,13 @@
     drBack.hidden = !(view === 'ship' || view === 'pay');
     if (view === 'cart') { drMain.textContent = t('bag.continue'); drMain.disabled = cart.length === 0; }
     if (view === 'ship') { drMain.textContent = t('bag.toPay'); drMain.disabled = false; }
-    if (view === 'pay') { drMain.textContent = t('bag.place', { v: money(s.total) }); drMain.disabled = false; }
+    if (view === 'pay') {
+      const pix = payMethod() === 'pix';
+      if (placing) { drMain.textContent = t(pix ? 'bag.generating' : 'bag.placing'); drMain.disabled = true; }
+      else if (pix && pend && pend.expired) { drMain.textContent = t('bag.newPix'); drMain.disabled = false; }
+      else if (pix && pend) { drMain.textContent = t('bag.waitingPay'); drMain.disabled = true; }
+      else { drMain.textContent = t(pix ? 'bag.genPix' : 'bag.place', { v: money(s.total) }); drMain.disabled = false; }
+    }
     const idx = ORDER.indexOf(view);
     $$('#stepper li').forEach((li, i) => { li.classList.toggle('on', i === idx); li.classList.toggle('done', i < idx); });
   }
@@ -944,7 +1260,8 @@
   }
   function openBag() {
     drReturn = document.activeElement;
-    if (view === 'done') showView('cart');
+    if (view === 'done' && !doneFresh) showView('cart');
+    doneFresh = false;
     openOverlay(drawer);
     setTimeout(() => $('#drawerClose').focus(), 60);
   }
@@ -1023,31 +1340,25 @@
     return 2 * R * Math.asin(Math.sqrt(h));
   }
   const cepCache = new Map();
-  async function getJson(url) {
-    const ctrl = new AbortController(), tm = setTimeout(() => ctrl.abort(), 8000);
-    try {
-      const r = await fetch(url, { signal: ctrl.signal });
-      if (r.status === 404 || r.status === 400) return { notFound: true };
-      if (!r.ok) throw new Error('http ' + r.status);
-      return await r.json();
-    } finally { clearTimeout(tm); }
-  }
-  const settle = res => { res.inArea = res.dist != null ? res.dist <= 10 : (res.city === 'São Paulo' ? null : false); return res; };
   async function lookupCep(cep) {
     if (cepCache.has(cep)) return cepCache.get(cep);
-    let res;
-    try {                                                // street-level coordinates, so the 10 km check is real
-      const j = await getJson(`https://cep.awesomeapi.com.br/json/${cep}`);
-      if (j.notFound) res = { notFound: true };
-      else {
-        res = { street: j.address || '', hood: j.district || '', city: j.city || '', state: j.state || '' };
-        const lat = parseFloat(j.lat), lon = parseFloat(j.lng);
+    let res = null;
+    // street-level coordinates straight from the visitor's browser (the free quota is per visitor),
+    // then our own server as the backup; only the 8 digits leave the page, never cookies or a referrer
+    const ctrl = new AbortController(), tm = setTimeout(() => ctrl.abort(), 7000);
+    try {
+      const r = await fetch(`https://cep.awesomeapi.com.br/json/${cep}`, { signal: ctrl.signal, credentials: 'omit', referrerPolicy: 'no-referrer', cache: 'force-cache' });
+      if (r.status === 404 || r.status === 400) res = { notFound: true };
+      else if (r.ok) {
+        const j = await r.json(), lat = parseFloat(j.lat), lon = parseFloat(j.lng);
+        res = { street: String(j.address || '').slice(0, 90), hood: String(j.district || '').slice(0, 90), city: String(j.city || '').slice(0, 90), state: String(j.state || '').slice(0, 4) };
         if (Number.isFinite(lat) && Number.isFinite(lon)) { res.lat = lat; res.lon = lon; res.dist = km(STORE, { lat, lon }); }
-        settle(res);
+        res.inArea = res.dist != null ? res.dist <= 10 : (res.city === 'São Paulo' ? null : false);
       }
-    } catch {                                            // backup: address only (its coordinates are city-level)
-      const j = await getJson(`https://brasilapi.com.br/api/cep/v2/${cep}`);
-      res = j.notFound ? { notFound: true } : settle({ street: j.street || '', hood: j.neighborhood || '', city: j.city || '', state: j.state || '' });
+    } catch { /* fall back to our server */ } finally { clearTimeout(tm); }
+    if (!res) {
+      try { res = await api('/cep/' + cep, { timeout: 14000 }); }
+      catch (e) { if (e.status === 404 || e.status === 400) res = { notFound: true }; else throw e; }
     }
     cepCache.set(cep, res); return res;
   }
@@ -1084,50 +1395,119 @@
     showView('pay');
   });
 
-  /* --- payment step --- */
-  function drawQR(seed) {
-    const r = rng(seed), N = 29, cells = [];
-    const finder = (x, y) => { for (let i = 0; i < 7; i++) for (let j = 0; j < 7; j++) { const edge = i === 0 || j === 0 || i === 6 || j === 6, core = i > 1 && i < 5 && j > 1 && j < 5; if (edge || core) cells.push([x + i, y + j]); } };
-    finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
-    for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) {
-      const inF = (x < 8 && y < 8) || (x > N - 9 && y < 8) || (x < 8 && y > N - 9);
-      if (!inF && r() < 0.47) cells.push([x, y]);
-    }
-    $('#qr').innerHTML = cells.map(([x, y]) => `<rect x="${x}" y="${y}" width="1.02" height="1.02"/>`).join('');
+  /* --- payment step: the order is created on the server. Pix shows a real QR code that opens
+         /pix on a phone; the phone confirms, and this screen hears it by polling the order status. --- */
+  let pend = null, placing = false, pollT = 0, tickT = 0, doneFresh = false, lastOrder = null;
+  const payMsg = $('#payMsg');
+  const payMethod = () => ($('input[name="pay"]:checked', views.pay) || {}).value || 'pix';
+  const errText = e => { const k = 'err.' + ((e && e.code) || 'generic'), m = t(k); return m === k ? t('err.generic') : m; };
+  const cartSig = () => JSON.stringify([cart, coupon, $('#cName').value.trim(), digits($('#cPhone').value), digits(cCep.value), $('#cNum').value.trim(), $('#cComp').value.trim(), windowSel]);
+  const pixUrl = () => `${location.origin}/pix/#o=${pend.id}&t=${pend.token}`;
+  function pixState(state) {                                  // idle | live | paid
+    $('#pixIdle').hidden = state !== 'idle'; $('#pixLive').hidden = state !== 'live';
+    const paid = $('#pixPaid'); paid.hidden = state !== 'paid'; paid.classList.toggle('show', state === 'paid');
   }
   function buildPay() {
-    const s = sums();
-    drawQR(hash(JSON.stringify(cart) + s.total));
-    const pay = $('input[name="pay"]:checked', views.pay).value;
+    const s = sums(), pay = payMethod();
+    if (pend && !pend.paid && pend.sig !== cartSig()) dropPix();
     $('#pixBox').hidden = pay !== 'pix'; $('#cardNote').hidden = pay !== 'card';
+    if (pay === 'pix') pixState(pend ? (pend.paid ? 'paid' : 'live') : 'idle');
     $('#sumCount').textContent = s.count === 1 ? t('pay.item1') : t('pay.items', { n: s.count });
     $('#sumList').innerHTML = cart.map(it => { const L = lineInfo(it); return `<li><span>${it.qty} × ${esc(L.name)}</span><span>${money(L.price * it.qty)}</span></li>`; }).join('');
     const where = coAddr && coAddr.street ? `${coAddr.street}, ${$('#cNum').value.trim()}${$('#cComp').value.trim() ? ' · ' + $('#cComp').value.trim() : ''}` : '';
     $('#sumAddr').textContent = [where, windowSel ? t('co.' + windowSel) : ''].filter(Boolean).join(' · ');
-    $('#pixCopy').textContent = t('pay.copy');
+    payMsg.textContent = '';
+    setButtons();
   }
   views.pay.addEventListener('change', buildPay);
+  async function placeOrder() {
+    const pay = payMethod();
+    if (placing || (pay === 'pix' && pend && !pend.expired)) return;
+    if (pend && pend.expired) dropPix();
+    placing = true; payMsg.textContent = ''; setButtons();
+    try {
+      const r = await api('/orders', { method: 'POST', body: {
+        items: cart.map(({ kind, id, fmt, grind, buy, qty }) => ({ kind, id, fmt, grind, buy, qty })),
+        coupon, name: $('#cName').value.trim(), phone: digits($('#cPhone').value), cep: digits(cCep.value),
+        number: $('#cNum').value.trim(), complement: $('#cComp').value.trim(), window: windowSel, pay, lang: LANG, website: $('#cHp').value,
+      } });
+      if (pay === 'card') { placing = false; finishOrder(r, false); return; }
+      pend = { id: r.id, code: r.code, token: r.pix.token, expiresAt: Date.parse(r.pix.expiresAt), total: r.total, sig: cartSig(), paid: false, expired: false };
+      showPix();
+    } catch (e) {
+      payMsg.className = 'f-msg'; payMsg.textContent = errText(e);
+    } finally { placing = false; setButtons(); }
+  }
+  function showPix() {
+    const q = window.QR.path(pixUrl()), svg = $('#qr'), path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    svg.setAttribute('viewBox', `0 0 ${q.size} ${q.size}`); path.setAttribute('d', q.d); svg.replaceChildren(path);
+    $('#pixOrder').textContent = t('pay.order', { code: pend.code });
+    $('#pixOpen').href = pixUrl();
+    const st = $('#pixState'); st.className = 'pix-state'; $('span', st).textContent = t('pay.waiting');
+    pixState('live'); setButtons();
+    clearInterval(tickT); tickT = setInterval(tickPix, 1000); tickPix();
+    clearTimeout(pollT); pollT = setTimeout(poll, 2500);
+  }
+  function tickPix() {
+    if (!pend || pend.paid) { clearInterval(tickT); return; }
+    const left = clamp(Math.round((pend.expiresAt - Date.now()) / 1000), 0, 900);   // never above 15:00 if this clock runs behind the server
+    $('#pixTimer').textContent = `${pad2(Math.floor(left / 60))}:${pad2(left % 60)}`;
+    if (!left) expirePix();
+  }
+  async function poll() {
+    clearTimeout(pollT);
+    const mine = pend;
+    if (!mine || mine.paid || mine.expired) return;
+    try {
+      const r = await api('/pix/' + mine.id, { timeout: 8000 });
+      if (mine !== pend) return;
+      if (r.status === 'paid') { paidPix(); return; }
+      if (r.status === 'expired') { expirePix(); return; }
+    } catch { /* a hiccup: keep listening */ }
+    if (mine === pend) pollT = setTimeout(poll, document.hidden ? 6000 : 2000);
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && pend && !pend.paid && !pend.expired) poll(); });
+  function paidPix() {
+    pend.paid = true; clearInterval(tickT); clearTimeout(pollT);
+    pixState('paid'); setButtons();
+    if (drawer.hidden) say(t('pay.paid') + ' · ' + pend.code);
+    const r = { code: pend.code, total: pend.total };
+    setTimeout(() => finishOrder(r, true), 1700);
+  }
+  function expirePix() {
+    if (!pend) return;
+    pend.expired = true; clearInterval(tickT); clearTimeout(pollT);
+    const st = $('#pixState'); st.className = 'pix-state bad'; $('span', st).textContent = t('pay.expired');
+    setButtons();
+  }
+  function dropPix() { pend = null; clearInterval(tickT); clearTimeout(pollT); pixState('idle'); }
   $('#pixCopy').addEventListener('click', async () => {
-    const code = '00020126580014BR.GOV.BCB.PIX0136CAFFEDORO-DEMO-SHINNARE5204000053039865802BR5913CAFFE DORO6009SAO PAULO6304DEMO';
-    try { await navigator.clipboard.writeText(code); } catch { /* clipboard may be blocked; the label still confirms */ }
-    $('#pixCopy').textContent = t('pay.copied');
+    if (!pend) return;
+    try { await navigator.clipboard.writeText(pixUrl()); } catch { /* clipboard may be blocked */ }
+    const sp = $('#pixCopy span'); sp.textContent = t('pay.linkCopied');
+    setTimeout(() => { sp.textContent = t('pay.copyLink'); }, 2200);
   });
-  function placeOrder() {
-    const s = sums();
-    order = 'CD-' + String(1000 + Math.floor(Math.random() * 9000));
+  function orderSummary() {
+    if (!lastOrder) return;
     const lower = x => x.charAt(0).toLowerCase() + x.slice(1);
-    const where = coAddr && coAddr.street ? `${coAddr.street}, ${$('#cNum').value.trim()}` : t('done.yourAddr');
-    $('#coTitle').textContent = t('done.title', { n: order });
-    $('#coSum').textContent = t('done.eta', { when: lower(t('co.' + (windowSel || 'tmAm'))), where });
+    $('#coTitle').textContent = t('done.title', { n: lastOrder.code });
+    $('#coSum').textContent = t('done.eta', { when: lower(t('co.' + (lastOrder.win || 'tmAm'))), where: lastOrder.where || t('done.yourAddr') }) + ' ' + t(lastOrder.paid ? 'done.paid' : 'done.card') + '.';
+    $('#coWa').href = waLink(WA_CAFE, t('done.waMsg', { code: lastOrder.code, total: money(lastOrder.total) }));
+  }
+  function finishOrder(r, paid) {
+    order = r.code;
+    lastOrder = { code: r.code, total: r.total, paid, win: windowSel, where: coAddr && coAddr.street ? `${coAddr.street}, ${$('#cNum').value.trim()}` : '' };
+    orderSummary();
     const now = new Date(), hm = d => new Intl.DateTimeFormat(locale(), { hour: '2-digit', minute: '2-digit' }).format(d);
     $('#tl1').textContent = hm(now); $('#tl2').textContent = hm(new Date(now.getTime() + 60000));
-    void s;
     cart = []; coupon = ''; $('#couponIn').value = ''; $('#couponMsg').textContent = ''; save();
     views.ship.reset(); cAddr.textContent = ''; coArea = null; coAddr = null;
+    pend = null; clearInterval(tickT); clearTimeout(pollT); pixState('idle');
+    doneFresh = drawer.hidden;
     showView('done');
-    setTimeout(() => views.done.focus(), 60);
+    if (!drawer.hidden) setTimeout(() => views.done.focus(), 60);
   }
-  langHooks.push(() => { renderBag(); showView(view); if (view === 'done' && order) $('#coTitle').textContent = t('done.title', { n: order }); });
+  langHooks.push(() => { renderBag(); showView(view); if (view === 'done') orderSummary(); if (pend && !pend.paid) { $('#pixOrder').textContent = t('pay.order', { code: pend.code }); } });
 
   /* ================= delivery section: CEP check with a pin on the rings ================= */
   const cepIn = $('#cepIn'), cepOut = $('#cepOut'), youPin = $('#youPin');
@@ -1227,13 +1607,25 @@
     fillTimes();
   }
   const slotKey = () => `${rDate.value} ${rTime.value}`;
+  const served = new Map();                                    // slotKey -> Set of booked tables (server truth)
+  let availSeq = 0;
+  async function loadAvailability() {
+    const key = slotKey(), n = ++availSeq;
+    if (!rTime.value || served.has(key)) return;
+    try {
+      const r = await api(`/availability?day=${encodeURIComponent(rDate.value)}&slot=${encodeURIComponent(rTime.value)}`, { timeout: 8000 });
+      served.set(key, new Set(r.busy));
+      if (n === availSeq && key === slotKey()) refreshTables(true);
+    } catch { /* offline: the seeded pattern stays on screen */ }
+  }
   function tableState(tb) {
-    const r = rng(hash(slotKey() + '#' + tb.n));
-    const busy = mine.has(slotKey() + '#' + tb.n) || r() < 0.3;
+    const key = slotKey(), real = served.get(key);
+    const busy = real ? real.has(tb.n) : (mine.has(key + '#' + tb.n) || rng(hash(key + '#' + tb.n))() < 0.3);
     return busy ? 'busy' : (tb.seats < +rPeople.value ? 'small' : 'free');
   }
   const describe = tb => t('res.desc', { n: pad2(tb.n), s: tb.seats, zone: t('zone.' + tb.zone) });
-  function refreshTables() {
+  function refreshTables(fromServer) {
+    if (!fromServer) loadAvailability();
     const people = +rPeople.value;
     TABLES.forEach(tb => { tb.state = rTime.value ? tableState(tb) : 'busy'; });
     TABLES.forEach(tb => {
@@ -1272,38 +1664,71 @@
   }
   rList.addEventListener('change', () => pickTable(TABLES.find(x => String(x.n) === rList.value) || null));
   rDate.addEventListener('change', () => { fillTimes(rTime.value); refreshTables(); });
-  rTime.addEventListener('change', refreshTables);
-  rPeople.addEventListener('change', refreshTables);
+  rTime.addEventListener('change', () => refreshTables());
+  rPeople.addEventListener('change', () => refreshTables());
   maskPhone($('#rPhone'));
   fillPeople(); initDates(); refreshTables(); updateResLabels();
   const resForm = $('#resForm'), resDone = $('#resDone');
   let lastRes = null;
+  const rEmail = $('#rEmail');
+  const gcalStamp = (day, hhmm, addMin) => {                     // Google Calendar local time, e.g. 20260927T190000
+    const [h, m] = hhmm.split(':').map(Number), tot = h * 60 + m + addMin;
+    return day.replace(/-/g, '') + 'T' + pad2(Math.floor(tot / 60)) + pad2(tot % 60) + '00';
+  };
   function resSummary() {
     if (!lastRes) return;
     let when = new Intl.DateTimeFormat(locale(), { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date(lastRes.date + 'T12:00:00'));
     when = when.charAt(0).toUpperCase() + when.slice(1);
+    const people = t(lastRes.people > 1 ? 'res.persons' : 'res.person', { n: lastRes.people });
     $('#doneTitle').textContent = t('res.doneT', { n: pad2(lastRes.n) });
-    $('#doneSum').textContent = t('res.doneS', { when, time: fmtTime(lastRes.time), people: t(lastRes.people > 1 ? 'res.persons' : 'res.person', { n: lastRes.people }), name: lastRes.name });
+    $('#doneCode').textContent = t('res.code', { code: lastRes.code });
+    $('#doneSum').textContent = t('res.doneS', { when, time: fmtTime(lastRes.time), people, name: lastRes.name });
+    $('#doneMail span').textContent = lastRes.mail ? t('res.mailSent', { email: lastRes.email }) : t('res.mailLater');
+    const cal = new URLSearchParams({
+      action: 'TEMPLATE', text: t('res.calTitle', { n: pad2(lastRes.n) }),
+      dates: gcalStamp(lastRes.date, lastRes.time, 0) + '/' + gcalStamp(lastRes.date, lastRes.time, 90), ctz: 'America/Sao_Paulo',
+      location: 'Alameda dos Cafezais, 180 · Jardins, São Paulo', details: t('res.calDetails', { code: lastRes.code, people }),
+    });
+    $('#resCal').href = 'https://calendar.google.com/calendar/render?' + cal;
+    $('#resWa').href = waLink(WA_CAFE, t('res.waMsg', { n: pad2(lastRes.n), when: when.toLowerCase(), time: fmtTime(lastRes.time), people, code: lastRes.code, name: lastRes.name }));
   }
-  resForm.addEventListener('submit', e => {
+  let booking = false;
+  resForm.addEventListener('submit', async e => {
     e.preventDefault();
+    if (booking) return;
     const name = $('#rName'), phone = $('#rPhone');
-    [name, phone].forEach(el => el.removeAttribute('aria-invalid'));
+    [name, phone, rEmail].forEach(el => el.removeAttribute('aria-invalid'));
     rMsg.className = 'f-msg';
     if (!rTime.value) { rMsg.textContent = t('res.errDay'); rDate.focus(); return; }
     if (!selected) { rMsg.textContent = t('res.errTable'); return; }
     const bad = [];
     if (name.value.trim().length < 2) bad.push(name);
     if (digits(phone.value).length < 10) bad.push(phone);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(rEmail.value.trim())) bad.push(rEmail);
     if (bad.length) { bad.forEach(el => el.setAttribute('aria-invalid', 'true')); rMsg.textContent = t('res.errFields'); bad[0].focus(); return; }
-    lastRes = { n: selected.n, date: rDate.value, time: rTime.value, people: +rPeople.value, name: name.value.trim().split(' ')[0] };
-    resSummary();
-    mine.add(slotKey() + '#' + selected.n); store.set('cdo-reservas', [...mine]);
-    resForm.hidden = true; resDone.hidden = false; resDone.classList.add('show'); resDone.focus();
+    booking = true; rSubmit.disabled = true; rSubmit.textContent = t('res.sending');
+    const pick = selected, key = slotKey();
+    try {
+      const r = await api('/reservations', { method: 'POST', body: {
+        day: rDate.value, slot: rTime.value, table: pick.n, people: +rPeople.value,
+        name: name.value.trim(), phone: digits(phone.value), email: rEmail.value.trim(), lang: LANG, website: $('#rHp').value,
+      } });
+      lastRes = { n: pick.n, date: rDate.value, time: rTime.value, people: +rPeople.value, name: name.value.trim().split(' ')[0], code: r.code, mail: r.mail, email: rEmail.value.trim() };
+      resSummary();
+      mine.add(key + '#' + pick.n); store.set('cdo-reservas', [...mine].slice(-40));
+      if (served.has(key)) served.get(key).add(pick.n);
+      resForm.hidden = true; resDone.hidden = false; resDone.classList.add('show'); resDone.focus();
+    } catch (err) {
+      if (err.code === 'table_taken') { served.delete(key); rMsg.textContent = t('res.errTaken'); pickTable(null); refreshTables(); }
+      else if (err.code === 'invalid_email') { rEmail.setAttribute('aria-invalid', 'true'); rMsg.textContent = t('err.invalid_email'); rEmail.focus(); }
+      else if (err.code === 'invalid_phone') { phone.setAttribute('aria-invalid', 'true'); rMsg.textContent = t('err.invalid_phone'); phone.focus(); }
+      else if (err.code === 'invalid_slot') { served.clear(); fillTimes(); refreshTables(); rMsg.textContent = t('err.invalid_slot'); }
+      else rMsg.textContent = errText(err);
+    } finally { booking = false; rSubmit.disabled = false; updateResLabels(); }
   });
   $('#resAgain').addEventListener('click', () => {
     resDone.hidden = true; resDone.classList.remove('show'); resForm.hidden = false;
-    pickTable(null); refreshTables(); $('#rName').value = ''; $('#rPhone').value = ''; rDate.focus();
+    pickTable(null); refreshTables(); rDate.focus();
   });
   langHooks.push(() => { fillPeople(); fillTimes(rTime.value); refreshTables(); updateResLabels(); resSummary(); rMsg.textContent = ''; });
 
@@ -1317,17 +1742,43 @@
     });
     cardWrap.addEventListener('pointerleave', () => { ['--rx', '--ry', '--sx'].forEach(v => clubCard.style.removeProperty(v)); });
   }
-  let clubName = '';
-  $('#clubForm').addEventListener('submit', e => {
+  let clubName = '', clubKey = '', clubBusy = false;
+  $('#clubForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const v = $('#clubEmail').value.trim(), msg = $('#clubMsg');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { msg.className = 'f-msg'; msg.textContent = t('club.bad'); $('#clubEmail').focus(); return; }
-    clubName = v.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).slice(0, 24);
-    $('#ccName').textContent = clubName;
-    msg.className = 'f-msg ok'; msg.textContent = t('club.ok');
-    clubCard.animate?.([{ transform: 'rotateX(8deg) rotateY(-14deg) scale(1)' }, { transform: 'rotateX(0deg) rotateY(180deg) scale(1.04)' }, { transform: 'rotateX(8deg) rotateY(346deg) scale(1)' }], { duration: RM.matches ? 0 : 1100, easing: 'cubic-bezier(.65,0,.35,1)' });
+    if (clubBusy) return;
+    const v = $('#clubEmail').value.trim(), msg = $('#clubMsg'), btn = $('#clubForm button');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { msg.className = 'f-msg'; clubKey = 'club.bad'; msg.textContent = t(clubKey); $('#clubEmail').focus(); return; }
+    clubBusy = true; btn.disabled = true; btn.textContent = t('club.sending');
+    try {
+      const r = await api('/club', { method: 'POST', body: { email: v, lang: LANG, website: $('#clubForm .hp').value } });
+      clubName = v.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).slice(0, 24);
+      $('#ccName').textContent = clubName;
+      clubKey = r.fresh ? 'club.ok' : 'club.again';
+      msg.className = 'f-msg ok'; msg.textContent = t(clubKey);
+      clubCard.animate?.([{ transform: 'rotateX(8deg) rotateY(-14deg) scale(1)' }, { transform: 'rotateX(0deg) rotateY(180deg) scale(1.04)' }, { transform: 'rotateX(8deg) rotateY(346deg) scale(1)' }], { duration: RM.matches ? 0 : 1100, easing: 'cubic-bezier(.65,0,.35,1)' });
+    } catch (err) {
+      clubKey = ''; msg.className = 'f-msg'; msg.textContent = err.code === 'invalid_email' ? t('club.bad') : errText(err);
+    } finally { clubBusy = false; btn.disabled = false; btn.textContent = t('club.join'); }
   });
-  langHooks.push(() => { if (clubName) $('#ccName').textContent = clubName; if ($('#clubMsg').textContent) $('#clubMsg').textContent = t($('#clubMsg').classList.contains('ok') ? 'club.ok' : 'club.bad'); });
+  langHooks.push(() => { if (clubName) $('#ccName').textContent = clubName; if (clubKey) $('#clubMsg').textContent = t(clubKey); });
+
+  /* ================= SHINNARE: the chameleon keeps an eye on you; the team is one tap away ================= */
+  const cham = $('#cham');
+  if (cham && !RM.matches) {
+    const eye = $('.cham-eye', cham);
+    let idle = 0;
+    if (FINE) addEventListener('pointermove', e => {
+      const r = eye.getBoundingClientRect();
+      if (r.bottom < -300 || r.top > innerHeight + 300) return;          // only while the footer is near
+      const deg = Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+      eye.style.setProperty('--eye', (deg + 8).toFixed(1) + 'deg');      // the pupil sits 8° above the axis in the artwork
+      cham.classList.add('tracking');
+      clearTimeout(idle); idle = setTimeout(() => { cham.classList.remove('tracking'); eye.style.removeProperty('--eye'); }, 2600);
+    }, { passive: true });
+    cham.addEventListener('click', () => cham.classList.toggle('hue'));   // touch screens: tap to change colour
+  }
+  function syncTeamLinks() { $$('.wa-card[data-wa]').forEach(a => { a.href = waLink(a.dataset.wa, t('studio.waMsg')); }); }
+  syncTeamLinks(); langHooks.push(syncTeamLinks);
 
   /* ================= reviews carousel ================= */
   const track = $('#revTrack');

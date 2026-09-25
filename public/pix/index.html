@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pix · Caffè D’oro</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#130c08">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="/assets/img/grao-ouro.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Marcellus&display=swap">
+<link rel="stylesheet" href="/assets/pix.css?v=3">
+</head>
+<body>
+<main class="card" id="card" aria-live="polite">
+  <header class="brand">
+    <img src="/assets/img/grao-ouro.webp" alt="" width="44" height="43">
+    <span>Caffè D’oro</span>
+  </header>
+  <p class="kick" data-t="kick">Pix de demonstração</p>
+
+  <section class="state" id="sLoading">
+    <span class="spin" aria-hidden="true"></span>
+    <p data-t="loading">Carregando o pagamento...</p>
+  </section>
+
+  <section class="state" id="sPay" hidden>
+    <p class="label" data-t="amount">Valor</p>
+    <p class="amount" id="amount"></p>
+    <p class="meta"><span id="orderCode"></span> · <span id="count"></span></p>
+    <p class="timer"><span data-t="expires">Expira em</span> <b id="timer">15:00</b></p>
+    <button class="btn" type="button" id="confirm"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="confirm">Confirmar pagamento</span></button>
+    <p class="note" data-t="note">Nada é cobrado. Ao confirmar, a tela do pedido atualiza sozinha.</p>
+  </section>
+
+  <section class="state" id="sPaid" hidden>
+    <svg class="ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" pathLength="1"/><path d="M27 41l9 9 17-19" pathLength="1"/></svg>
+    <h1 class="title" data-t="paidT">Pagamento confirmado!</h1>
+    <p class="text" data-t="paidP">Pode voltar para a tela do pedido: ela já mostra que foi pago.</p>
+    <p class="meta" id="paidCode"></p>
+  </section>
+
+  <section class="state" id="sError" hidden>
+    <h1 class="title" id="errT"></h1>
+    <p class="text" id="errP"></p>
+  </section>
+
+  <p class="foot"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="1.6"/></svg><span data-t="foot">Conexão segura · Um projeto SHINNARE</span></p>
+</main>
+<script src="/assets/pix.js?v=3"></script>
+</body>
+</html>

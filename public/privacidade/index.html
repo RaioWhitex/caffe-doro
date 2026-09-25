@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidade · Caffè D’oro</title>
+<meta name="description" content="Como a Caffè D’oro, projeto de portfólio da SHINNARE, trata os dados de reservas, pedidos e do clube.">
+<meta name="theme-color" content="#130c08">
+<link rel="canonical" href="https://caffedoro-shinnare.vercel.app/privacidade">
+<link rel="icon" href="/assets/img/grao-ouro.webp" type="image/webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Marcellus&display=swap">
+<link rel="stylesheet" href="/assets/doc.css?v=3">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><img src="/assets/img/grao-ouro.webp" alt="" width="34" height="33">Caffè D’oro</a>
+  <a class="back" href="/">Voltar ao site</a>
+</header>
+<main>
+  <p class="kick">LGPD · Lei 13.709/2018</p>
+  <h1>Política de privacidade</h1>
+  <p>A Caffè D’oro é uma marca fictícia, criada pela <b>SHINNARE</b> como projeto de portfólio. As reservas, os pedidos e o clube funcionam de verdade no nosso sistema, mas nada é cobrado e nada é entregue. Mesmo assim, tratamos os seus dados com o mesmo cuidado de uma empresa real.</p>
+  <div class="box"><p><b>Resumo:</b> pedimos só o necessário, guardamos por pouco tempo, não vendemos nada a ninguém e não usamos cookies de rastreamento.</p></div>
+
+  <h2>Quais dados usamos e para quê</h2>
+  <ul>
+    <li><b>Reserva de mesa:</b> nome, WhatsApp e e-mail, para registrar a reserva e enviar a confirmação e o convite da agenda.</li>
+    <li><b>Pedido na loja:</b> nome, WhatsApp, CEP, número e complemento, para calcular a entrega e acompanhar o pedido.</li>
+    <li><b>Clube D’oro:</b> e-mail, para enviar o cupom de boas-vindas.</li>
+    <li><b>Segurança:</b> um código gerado a partir do endereço IP, que muda todo dia e não permite descobrir o IP, só para limitar abusos.</li>
+  </ul>
+  <p>A base legal é a execução do que você pediu (art. 7º, V) e o legítimo interesse em manter o serviço seguro (art. 7º, IX).</p>
+
+  <h2>Por quanto tempo</h2>
+  <ul>
+    <li>Reservas: apagadas automaticamente 7 dias depois da data reservada.</li>
+    <li>Pedidos: apagados automaticamente em 30 dias.</li>
+    <li>Clube: e-mail apagado em 180 dias.</li>
+    <li>Registros de segurança: apagados em 2 dias.</li>
+  </ul>
+
+  <h2>Com quem os dados passam</h2>
+  <ul>
+    <li><b>Supabase</b> (banco de dados, servidor em São Paulo), com acesso fechado ao público.</li>
+    <li><b>Vercel</b> (hospedagem do site).</li>
+    <li><b>Google</b> (Gmail e Google Agenda), só para enviar o e-mail de confirmação e o convite.</li>
+    <li><b>CallMeBot</b>, que avisa a equipe no WhatsApp sobre novas reservas e pedidos, com o primeiro nome e o WhatsApp mascarado.</li>
+    <li><b>AwesomeAPI e BrasilAPI</b>, que recebem só o CEP digitado para achar o endereço e a distância.</li>
+    <li><b>Google Fonts</b>, que entrega as fontes do site.</li>
+  </ul>
+
+  <h2>O que fica no seu aparelho</h2>
+  <p>O site guarda no seu próprio navegador o tema, o idioma e a sacola, para você não perder nada ao voltar. Não usamos cookies de publicidade nem de rastreamento.</p>
+
+  <h2>Seus direitos</h2>
+  <p>Você pode pedir acesso, correção ou exclusão dos seus dados a qualquer momento. Fale com a SHINNARE pelo WhatsApp <a href="https://wa.me/5511933914350" rel="noopener noreferrer" target="_blank">(11) 93391-4350</a>.</p>
+
+  <h2>Segurança</h2>
+  <p>Todo o tráfego é criptografado (HTTPS). O banco de dados não aceita acesso direto: tudo passa por um servidor que confere cada campo, recalcula preços e limita tentativas repetidas. Encontrou uma falha? Veja <a href="/.well-known/security.txt">security.txt</a>.</p>
+
+  <hr>
+  <section lang="en">
+    <h2>In English</h2>
+    <p>Caffè D’oro is a fictional brand and a SHINNARE portfolio project. Bookings, orders and the club run on a real system, but nothing is charged or delivered. We collect only what each form needs (name, WhatsApp, email, postal code), keep it for a short time (7 days after a booking, 30 days for orders, 180 days for the club), never sell it and use no tracking cookies. Data is processed by Supabase (São Paulo), Vercel, Google (email and calendar invites), CallMeBot (team WhatsApp alerts with a first name only) and postal code lookup services. To access or delete your data, message us on WhatsApp.</p>
+  </section>
+  <p class="small">Atualizada em 25 de setembro de 2026.</p>
+</main>
+</body>
+</html>

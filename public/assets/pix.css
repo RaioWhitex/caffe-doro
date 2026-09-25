@@ -1,0 +1,31 @@
+/* Caffè D'oro · Pix confirmation page (opened on a phone from the QR code) */
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:#130c08;-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom));font-family:"Jost",system-ui,sans-serif;font-weight:300;color:#f2e7d5;background:radial-gradient(80% 60% at 50% 20%,rgba(160,96,42,.28),transparent 70%),radial-gradient(60% 50% at 50% 110%,rgba(110,52,24,.3),transparent 70%),#130c08}
+.card{width:min(420px,100%);padding:30px 26px 22px;border-radius:28px;background:linear-gradient(170deg,rgba(42,28,19,.92),rgba(26,17,11,.96));border:1px solid rgba(217,167,74,.35);box-shadow:0 40px 90px -40px rgba(0,0,0,.9);text-align:center}
+.brand{display:flex;align-items:center;justify-content:center;gap:10px;font-family:"Marcellus",Georgia,serif;font-size:1.3rem;letter-spacing:.06em}
+.brand img{width:40px;height:auto}
+.kick{margin:14px 0 24px;font-size:.7rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:#e2b35c}
+.state{display:flex;flex-direction:column;align-items:center}
+.label{margin:0;font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:#a39079}
+.amount{margin:6px 0 4px;font-family:"Marcellus",Georgia,serif;font-size:clamp(2.6rem,12vw,3.4rem);line-height:1.1;color:#fbf3e6}
+.meta{margin:0;font-size:.92rem;color:#c9b69a}
+.timer{margin:14px 0 26px;font-size:.86rem;color:#a39079}
+.timer b{font-weight:500;color:#ebc173;font-variant-numeric:tabular-nums}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:58px;border:0;border-radius:999px;font:500 .86rem/1 "Jost",system-ui,sans-serif;letter-spacing:.18em;text-transform:uppercase;color:#1c1109;background:linear-gradient(180deg,#eec473 0%,#d9a74a 55%,#c08a35 100%);box-shadow:0 16px 36px -14px rgba(196,140,50,.85),inset 0 1px 0 rgba(255,244,214,.6);cursor:pointer;transition:transform .3s,opacity .3s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn:focus-visible{outline:2px solid #ebc173;outline-offset:3px}
+.note{margin:16px 0 0;font-size:.84rem;color:#a39079;line-height:1.5}
+.spin{width:34px;height:34px;border-radius:50%;border:2px solid rgba(217,167,74,.25);border-top-color:#d9a74a;animation:spin 1s linear infinite;margin:10px 0 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ring{width:92px;height:92px;margin:4px 0 16px}
+.ring circle,.ring path{fill:none;stroke:#d9a74a;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+.ring circle{animation:draw 1.1s cubic-bezier(.65,0,.35,1) forwards}
+.ring path{animation:draw .7s .8s cubic-bezier(.65,0,.35,1) forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.title{margin:0 0 8px;font-family:"Marcellus",Georgia,serif;font-weight:400;font-size:1.7rem;line-height:1.2;color:#fbf3e6}
+.text{margin:0 0 10px;color:#c9b69a;line-height:1.55}
+.foot{display:flex;align-items:center;justify-content:center;gap:8px;margin:28px 0 0;padding-top:16px;border-top:1px solid rgba(217,167,74,.18);font-size:.72rem;letter-spacing:.12em;color:#8f7d68}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ring circle,.ring path{stroke-dashoffset:0}}

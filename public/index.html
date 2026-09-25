@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="pt-BR" class="no-js" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caffè D’oro · Cafés extraordinários nos Jardins</title>
+<meta name="description" content="Cafeteria e torrefação nos Jardins, em São Paulo. Reserve sua mesa no salão ou receba café torrado nesta semana em casa, no mesmo dia, em até 10&nbsp;km.">
+<meta name="theme-color" content="#130c08">
+<meta name="color-scheme" content="dark light">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Caffè D’oro · Cafés extraordinários">
+<meta property="og:description" content="Uma experiência digital conceitual da SHINNARE: reserve sua mesa ou receba café fresco em casa, no mesmo dia.">
+<meta property="og:image" content="https://caffedoro-shinnare.vercel.app/assets/img/og.jpg">
+<meta property="og:url" content="https://caffedoro-shinnare.vercel.app/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://caffedoro-shinnare.vercel.app/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f3cf7e'/%3E%3Cstop offset='1' stop-color='%23a8702a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23130c08'/%3E%3Cpath d='M12 44C18 20 40 6 52 12' fill='none' stroke='url(%23g)' stroke-width='2.4' stroke-linecap='round'/%3E%3Cellipse cx='31' cy='34' rx='12' ry='17' transform='rotate(32 31 34)' fill='url(%23g)'/%3E%3Cpath d='M25 46c6-6 2-14 12-24' fill='none' stroke='%23130c08' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<script src="assets/boot.js?v=3"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500&family=Marcellus&family=Pinyon+Script&display=swap">
+<link rel="preload" as="image" href="assets/img/logo-s.webp">
+<link rel="stylesheet" href="assets/site.css?v=3">
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Pular para o conteúdo</a>
+<div class="progress" aria-hidden="true"><i id="progress"></i></div>
+
+<div class="env" aria-hidden="true">
+  <div class="glow"></div>
+  <div class="dust"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="grain"></div>
+</div>
+
+<svg class="sprite" width="0" height="0" aria-hidden="true">
+  <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 8h14l-1 12H6L5 8Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M19.5 14.6A7.8 7.8 0 0 1 9.4 4.5a7.8 7.8 0 1 0 10.1 10.1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8Z" fill="currentColor"/></symbol>
+  <symbol id="i-wa" viewBox="0 0 24 24"><path d="M12 3.2a8.7 8.7 0 0 0-7.5 13.1L3.3 20.8l4.6-1.2A8.7 8.7 0 1 0 12 3.2Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9.1 7.9c.3-.1.6 0 .8.3l.9 2c.1.3 0 .6-.2.8l-.6.6a6.3 6.3 0 0 0 2.9 2.9l.6-.6c.2-.2.5-.3.8-.2l2 .9c.3.2.4.5.3.8-.3 1.1-1.3 1.8-2.4 1.7A8.3 8.3 0 0 1 7.4 10.3c-.1-1.1.6-2.1 1.7-2.4Z" fill="currentColor"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="m4.5 7 7.5 6 7.5-6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M16 8V6.5A2.5 2.5 0 0 0 13.5 4h-7A2.5 2.5 0 0 0 4 6.5v7A2.5 2.5 0 0 0 6.5 16H8" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2.8" width="10" height="18.4" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M11 17.8h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+</svg>
+
+<div class="cursor" aria-hidden="true"><i class="c-ring"><b class="c-label"></b></i><i class="c-dot"></i></div>
+
+<!-- Project presentation: shown once per visit -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introTitle" aria-describedby="introText">
+  <div class="intro-bg" aria-hidden="true">
+    <img src="assets/img/intro-wood.webp" alt="" class="ib-wood" width="1200" height="693">
+    <img src="assets/img/ramo-blur.webp" alt="" class="ib-leaf l1" width="900" height="300">
+    <img src="assets/img/ramo-blur.webp" alt="" class="ib-leaf l2" width="900" height="300">
+  </div>
+  <div class="lang-switch intro-lang" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.label">
+    <button type="button" data-lang="pt" aria-pressed="true">PT</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <div class="intro-in">
+    <div class="intro-bar">
+      <p class="intro-kick" data-i18n="intro.kicker">Apresentação do projeto</p>
+    </div>
+    <div class="intro-logos">
+      <img class="il-cdo" src="assets/img/logo-s.webp" alt="Caffè D’oro" width="640" height="417">
+      <span class="il-line" aria-hidden="true"></span>
+      <img class="il-sh" src="assets/img/shinnare.webp" alt="SHINNARE" width="520" height="459">
+    </div>
+    <h2 class="intro-title" id="introTitle" data-i18n="intro.title">Você está entrando em uma experiência digital conceitual.</h2>
+    <p class="intro-text" id="introText" data-i18n="intro.text">A Caffè D’oro é uma marca fictícia criada para demonstrar um projeto de cafeteria premium. Este site está sendo desenvolvido pela SHINNARE como peça de portfólio.</p>
+    <button class="btn gold" type="button" id="introEnter" data-i18n="intro.enter">Entrar na experiência</button>
+    <div class="intro-load" aria-hidden="true"><span class="il-track"><i id="introBar"></i></span><span id="introPct">0%</span></div>
+  </div>
+</div>
+
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#topo" aria-label="Caffè D’oro, voltar ao início" data-i18n-attr="aria-label:nav.home">
+      <img src="assets/img/grao-ouro.webp" alt="" width="34" height="31">
+      <span>Caffè D’oro</span>
+    </a>
+    <nav class="links" aria-label="Principal" data-i18n-attr="aria-label:nav.main">
+      <a href="#cafes" data-i18n="nav.cafes">Cafés</a>
+      <a href="#ritual" data-i18n="nav.ritual">Ritual</a>
+      <a href="#salao" data-i18n="nav.salao">Salão</a>
+      <a href="#entrega" data-i18n="nav.entrega">Entrega</a>
+      <a href="#clube" data-i18n="nav.clube">Clube</a>
+    </nav>
+    <div class="nav-act">
+      <div class="lang-switch d-only" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="pt" aria-pressed="true">PT</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="icon-btn theme-btn d-only" type="button" data-theme-toggle aria-label="Mudar para o tema claro">
+        <svg class="ic-sun" width="20" height="20"><use href="#i-sun"/></svg><svg class="ic-moon" width="20" height="20"><use href="#i-moon"/></svg>
+      </button>
+      <button class="icon-btn bag-btn" type="button" id="bagBtn" aria-label="Abrir sacola, 0 itens">
+        <svg width="21" height="21"><use href="#i-bag"/></svg>
+        <span class="bag-count" id="bagCount" aria-hidden="true">0</span>
+      </button>
+      <a class="btn gold small d-only" href="#reservar" data-i18n="nav.reserve">Reservar mesa</a>
+      <button class="menu-btn" type="button" id="menuBtn" aria-expanded="false" aria-controls="mMenu" aria-label="Abrir menu"><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="m-menu" id="mMenu" hidden>
+    <a href="#cafes" data-i18n="nav.cafes">Cafés</a>
+    <a href="#ritual" data-i18n="nav.ritual">Ritual</a>
+    <a href="#salao" data-i18n="nav.salao">Salão</a>
+    <a href="#reservar" data-i18n="nav.reserve">Reservar mesa</a>
+    <a href="#entrega" data-i18n="nav.entrega">Entrega</a>
+    <a href="#clube" data-i18n="nav.clube">Clube</a>
+    <div class="m-tools">
+      <div class="lang-switch" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.label">
+        <button type="button" data-lang="pt" aria-pressed="true">PT</button><button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <button class="icon-btn theme-btn" type="button" data-theme-toggle aria-label="Mudar para o tema claro">
+        <svg class="ic-sun" width="20" height="20"><use href="#i-sun"/></svg><svg class="ic-moon" width="20" height="20"><use href="#i-moon"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO: layered scenes scrubbed by scroll. The default CSS state is the static hero. -->
+<section class="hero" id="topo" aria-label="Abertura" data-i18n-attr="aria-label:hero.label">
+  <h1 class="sr" data-i18n="hero.h1">Caffè D’oro, cafeteria e cafés especiais nos Jardins, São Paulo</h1>
+  <div class="stage" id="stage">
+    <div class="scene sD" id="sD" aria-hidden="true">
+      <div class="cover land">
+        <img class="sd-poster" srcset="assets/img/servido-m.webp 960w, assets/img/servido.webp 1672w" sizes="100vw" src="assets/img/servido.webp" alt="" width="1672" height="941" decoding="async">
+        <video class="sd-video" id="sdVidLand" muted loop playsinline preload="none" disablepictureinpicture data-src="assets/video/balcao-land" width="1920" height="1080"></video>
+      </div>
+      <div class="cover port">
+        <img class="sd-poster" src="assets/img/servido-retrato.webp" alt="" width="820" height="1457" loading="lazy" decoding="async">
+        <video class="sd-video" id="sdVidPort" muted loop playsinline preload="none" disablepictureinpicture data-src="assets/video/balcao-port" width="1080" height="1920"></video>
+      </div>
+      <div class="sd-sweep"></div>
+      <canvas class="embers" id="embers"></canvas>
+    </div>
+
+    <div class="scene sA" id="sA" aria-hidden="true">
+      <img class="burst-bg" id="burstBg" src="assets/img/explosao.webp" alt="" width="736" height="1104" decoding="async">
+      <div class="logo-wrap" id="logoWrap">
+        <img class="logo" srcset="assets/img/logo-s.webp 640w, assets/img/logo.webp 1100w" sizes="(max-aspect-ratio: 4/5) 88vw, 52vw" src="assets/img/logo-s.webp" alt="" width="1100" height="717" fetchpriority="high">
+        <svg class="ring" viewBox="0 0 400 300" preserveAspectRatio="none"><ellipse cx="200" cy="150" rx="192" ry="142" pathLength="1"/></svg>
+      </div>
+      <canvas class="burst" id="burst"></canvas>
+    </div>
+
+    <div class="scene sB" id="sB" aria-hidden="true">
+      <img class="ramo r1" data-srcset="assets/img/ramo-a-s.webp 860w, assets/img/ramo-a.webp 1500w" sizes="(max-aspect-ratio: 4/5) 120vw, 62vw" data-src="assets/img/ramo-a.webp" alt="" width="1500" height="560">
+      <img class="ramo r2" data-srcset="assets/img/ramo-b-s.webp 860w, assets/img/ramo-b.webp 1500w" sizes="(max-aspect-ratio: 4/5) 120vw, 58vw" data-src="assets/img/ramo-b.webp" alt="" width="1500" height="560">
+      <img class="ramo r3" data-src="assets/img/ramo-blur.webp" alt="" width="900" height="300">
+    </div>
+
+    <div class="scene sC" id="sC" aria-hidden="true">
+      <div class="bags" id="bags">
+        <img class="bag" data-i="-4" data-srcset="assets/img/hero-robusta-s.webp 300w, assets/img/hero-robusta.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-robusta.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="-3" data-srcset="assets/img/hero-caturra-s.webp 300w, assets/img/hero-caturra.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-caturra.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="-2" data-srcset="assets/img/hero-excelsa-s.webp 300w, assets/img/hero-excelsa.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-excelsa.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="-1" data-srcset="assets/img/hero-arabica-s.webp 300w, assets/img/hero-arabica.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-arabica.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="0" data-srcset="assets/img/hero-geisha-s.webp 300w, assets/img/hero-geisha.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-geisha.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="1" data-srcset="assets/img/hero-bourbon-s.webp 300w, assets/img/hero-bourbon.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-bourbon.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="2" data-srcset="assets/img/hero-liberica-s.webp 300w, assets/img/hero-liberica.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-liberica.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="3" data-srcset="assets/img/hero-maragogipe-s.webp 300w, assets/img/hero-maragogipe.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-maragogipe.webp" alt="" width="460" height="580">
+        <img class="bag" data-i="4" data-srcset="assets/img/hero-typica-s.webp 300w, assets/img/hero-typica.webp 460w" sizes="(max-aspect-ratio: 4/5) 42vw, 17vw" data-src="assets/img/hero-typica.webp" alt="" width="460" height="580">
+      </div>
+    </div>
+
+    <div class="scrim" aria-hidden="true"></div>
+
+    <div class="band b1" data-a="0" data-b="0.17">
+      <p class="kick" data-i18n="hero.kick">Cafés extraordinários · Jardins, São Paulo</p>
+      <p class="script split" data-fx="depth" data-i18n="hero.script">Café é tempo, em forma de experiência.</p>
+    </div>
+    <div class="band b2" data-a="0.21" data-b="0.41">
+      <h2 class="hl split" data-fx="part" data-i18n="hero.b2h">Tudo começa / no pé.</h2>
+      <p class="sub" data-i18n="hero.b2p">Nove origens, colhidas no ponto certo e torradas aqui, em pequenos lotes.</p>
+    </div>
+    <div class="band b3" data-a="0.53" data-b="0.76">
+      <h2 class="hl split" data-fx="drift" data-i18n="hero.b3h">Torrado há dias. / Não há meses.</h2>
+      <p class="sub" data-i18n="hero.b3p">A data da torra vem impressa em cada pacote. Passou de 20 dias, não sai da nossa loja.</p>
+    </div>
+    <div class="band b4 settle" data-a="0.85" data-b="1">
+      <p class="live-tag" aria-hidden="true"><i></i><span data-i18n="hero.live">Agora no balcão</span></p>
+      <div class="settle-top">
+        <div class="seal" aria-hidden="true">
+          <svg class="seal-text" viewBox="0 0 120 120"><defs><path id="sealPath" d="M60 60m-47 0a47 47 0 1 1 94 0a47 47 0 1 1-94 0"/></defs><text><textPath href="#sealPath" textLength="292" lengthAdjust="spacing" data-i18n="hero.seal">Reserve · Caffè D’oro · Jardins · São Paulo ·</textPath></text></svg>
+          <img class="settle-mark" src="assets/img/grao-ouro.webp" alt="" width="72" height="66">
+        </div>
+        <h2 class="hl split gold-text" data-fx="rise" data-i18n="hero.b4h">Sua mesa está pronta.</h2>
+        <p class="sub" data-i18n="hero.b4p">Reserve um horário no salão ou receba café fresco em casa, no mesmo dia, em até 10&nbsp;km dos Jardins.</p>
+      </div>
+      <div class="cta-row">
+        <a class="btn gold magnetic glow" href="#reservar" data-i18n="hero.cta1">Reservar mesa</a>
+        <a class="btn ghost magnetic" href="#cafes" data-i18n="hero.cta2">Comprar café</a>
+      </div>
+    </div>
+    <div class="cue" id="cue" aria-hidden="true"><span data-i18n="hero.cue">Role devagar</span><i></i></div>
+  </div>
+</section>
+
+<main id="main" tabindex="-1">
+  <svg class="thread" id="thread" aria-hidden="true"><path id="threadPath"/><circle id="spark" r="3.5"/></svg>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="mq-row" data-dir="-1"><div class="mq-track">
+      <span data-i18n="mq.1">Cafés extraordinários</span><b>✦</b><span class="o" data-i18n="mq.2">Torra da semana</span><b>✦</b><span data-i18n="mq.3">Jardins · São Paulo</span><b>✦</b><span class="o" data-i18n="mq.4">Do grão à xícara</span><b>✦</b>
+    </div></div>
+    <div class="mq-row" data-dir="1"><div class="mq-track">
+      <span class="o" data-i18n="mq.3">Jardins · São Paulo</span><b>✦</b><span data-i18n="mq.4">Do grão à xícara</span><b>✦</b><span class="o" data-i18n="mq.1">Cafés extraordinários</span><b>✦</b><span data-i18n="mq.2">Torra da semana</span><b>✦</b>
+    </div></div>
+  </div>
+
+  <!-- 1. Manifesto -->
+  <section class="sec manifesto" id="manifesto">
+    <div class="wrap">
+      <p class="kicker reveal"><span class="k-num">01</span><span data-i18n="man.kick">Manifesto</span></p>
+      <p class="man-text" id="manText" data-i18n="man.text">Café é tempo. O tempo certo de colher, de torrar e de servir. Por isso torramos pouco, torramos sempre e entregamos perto.</p>
+      <ol class="stats">
+        <li class="stat reveal">
+          <svg class="draw" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" pathLength="1"/><path d="M24 13v11l7 5" pathLength="1"/></svg>
+          <p class="num"><span class="count" data-to="20">20</span><small data-i18n="st.1n">dias</small></p>
+          <h3 data-i18n="st.1h">Da torra à xícara</h3>
+          <p data-i18n="st.1p">Nenhum pacote sai daqui com mais de 20 dias de torra. A data vem impressa.</p>
+        </li>
+        <li class="stat reveal">
+          <svg class="draw" viewBox="0 0 48 48" aria-hidden="true"><path d="M24 43s-13-12.5-13-23a13 13 0 0 1 26 0c0 10.5-13 23-13 23Z" pathLength="1"/><circle cx="24" cy="20" r="4.5" pathLength="1"/></svg>
+          <p class="num"><span class="count" data-to="10">10</span><small data-i18n="st.2n">km</small></p>
+          <h3 data-i18n="st.2h">Entrega no mesmo dia</h3>
+          <p data-i18n="st.2p">Pediu até as 16h, recebe hoje. Atendemos até 10&nbsp;km dos Jardins.</p>
+        </li>
+        <li class="stat reveal">
+          <svg class="draw" viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20h32M13 20v18M35 20v18M8 20l4-8h24l4 8" pathLength="1"/></svg>
+          <p class="num"><span class="count" data-to="20">20</span><small data-i18n="st.3n">mesas</small></p>
+          <h3 data-i18n="st.3h">Hora marcada, sem fila</h3>
+          <p data-i18n="st.3p">Reserve pelo site. Ninguém apressa a sua conta.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- Interlude: an ocean of liquid coffee and gold you can stir -->
+  <section class="oceano" id="oceano" aria-labelledby="ocH">
+    <div class="oc-stage" id="ocStage">
+      <img class="oc-still" src="assets/img/oceano.webp" alt="" width="736" height="1308" loading="lazy" decoding="async">
+      <canvas class="oc-gl" id="ocGl" aria-hidden="true"></canvas>
+      <div class="oc-shade" aria-hidden="true"></div>
+      <div class="oc-text">
+        <p class="script reveal" data-i18n="oc.script">Mergulhe</p>
+        <h2 class="display rv reveal" id="ocH" data-i18n="oc.h">Um oceano / de café.</h2>
+        <p class="lede reveal" data-i18n="oc.p">Encorpado como o Robusta, doce como o Bourbon, dourado como a crema de um espresso bem tirado.</p>
+        <p class="oc-hint" aria-hidden="true"><i></i><span data-i18n="oc.hint">Passe o mouse ou o dedo para mexer o café</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. The ritual: hold to pour -->
+  <section class="sec ritual" id="ritual">
+    <div class="wrap rit-grid">
+      <header class="rit-head reveal">
+        <p class="kicker"><span class="k-num">02</span><span data-i18n="rit.kick">O ritual</span></p>
+        <h2 class="display rv" data-i18n="rit.h">Tirado na hora,<br>servido devagar.</h2>
+        <p class="lede" data-i18n="rit.p">Segure o botão e sirva você mesmo. Um espresso da casa leva 28 segundos e 60 ml de paciência.</p>
+      </header>
+      <div class="rit-stage" id="ritStage">
+        <p class="corner tl" aria-hidden="true"><span data-i18n="rit.c1">Moído na hora</span><span data-i18n="rit.c2">Água a 92 °C</span><span data-i18n="rit.c3">28 segundos</span></p>
+        <p class="corner tr" aria-hidden="true"><span data-i18n="rit.c4">Do grão</span><span data-i18n="rit.c5">à sua</span><span data-i18n="rit.c6">xícara</span></p>
+        <div class="fbeans" aria-hidden="true">
+          <i class="fb near r1"><img src="assets/img/bean-2b.webp" alt="" loading="lazy" width="176" height="248"></i>
+          <i class="fb r2"><img src="assets/img/bean-1.webp" alt="" loading="lazy" width="128" height="200"></i>
+          <i class="fb r3"><img src="assets/img/bean-5.webp" alt="" loading="lazy" width="128" height="200"></i>
+          <i class="fb near r4"><img src="assets/img/bean-4b.webp" alt="" loading="lazy" width="176" height="248"></i>
+          <i class="fb far x-lite r5"><img src="assets/img/bean-3.webp" alt="" loading="lazy" width="128" height="200"></i>
+        </div>
+        <!-- the cup and the liquid drawn on the canvas travel together, so "serve another" takes both away -->
+        <div class="rit-rig" id="ritRig">
+          <div class="rit-cup" id="ritCup">
+            <img src="assets/img/xicara-ritual.webp" alt="" width="900" height="900" loading="lazy" decoding="async">
+            <span class="steam st-cup"><i></i><i></i><i></i></span>
+          </div>
+          <canvas id="ritCanvas" aria-hidden="true"></canvas>
+        </div>
+        <div class="rit-ctrl">
+          <button class="hold" id="ritHold" type="button">
+            <svg viewBox="0 0 100 100" aria-hidden="true"><circle class="h-bg" cx="50" cy="50" r="46"/><circle class="h-fg" id="holdRing" cx="50" cy="50" r="46" pathLength="1"/></svg>
+            <span class="h-label" id="holdLabel" data-i18n="rit.hold">Segure para servir</span>
+          </button>
+          <p class="rit-ml" id="ritMl">0 de 60 ml</p>
+          <div class="rit-done" id="ritDone" hidden>
+            <p class="rit-done-t" data-i18n="rit.done">Pronto. Agora é com você.</p>
+            <div class="cta-row">
+              <a class="btn gold magnetic" href="#reservar" data-i18n="rit.reserve">Tomar no salão</a>
+              <button class="btn ghost magnetic" type="button" id="ritAgain" data-i18n="rit.again">Servir outra</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Shop -->
+  <section class="sec loja" id="cafes">
+    <div class="wrap">
+      <header class="sec-head split-head reveal">
+        <div>
+          <p class="kicker"><span class="k-num">03</span><span data-i18n="shop.kick">A loja</span></p>
+          <h2 class="display rv" data-i18n="shop.h">Nove origens.<br>Escolha a sua.</h2>
+        </div>
+        <p class="lede" data-i18n="shop.lede">Em grãos para moer na hora, moído para o coador ou em cápsulas para a correria. Todos torrados nesta semana.</p>
+      </header>
+      <div class="chips reveal" role="tablist" aria-label="Categorias" data-i18n-attr="aria-label:cat.label" id="chips"></div>
+      <div class="grid" id="grid" role="tabpanel" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- 4. Club -->
+  <section class="sec clube" id="clube">
+    <div class="wrap club-grid">
+      <div class="club-card-wrap reveal">
+        <div class="club-card" id="clubCard">
+          <span class="cc-sheen" aria-hidden="true"></span>
+          <img class="cc-mark" src="assets/img/grao-ouro.webp" alt="" width="64" height="58" loading="lazy">
+          <p class="cc-brand">CLUBE D’ORO</p>
+          <p class="cc-num" aria-hidden="true">0001 · 2026 · 0917</p>
+          <p class="cc-name" id="ccName" data-i18n="club.cardName">Seu nome aqui</p>
+          <p class="cc-since" data-i18n="club.card">Membro desde 2026</p>
+        </div>
+      </div>
+      <div class="club-info reveal">
+        <p class="kicker"><span class="k-num">04</span><span data-i18n="club.kick">Clube D’oro</span></p>
+        <h2 class="display rv" data-i18n="club.h">Quem volta sempre,<br>ganha mais.</h2>
+        <p class="lede" data-i18n="club.p">Um cartão, três vantagens. Entre de graça e use no salão ou na loja.</p>
+        <ul class="perks">
+          <li><b data-i18n="club.p1n">10%</b><span data-i18n="club.p1">no primeiro pedido, com o cupom BEMVINDO</span></li>
+          <li><b data-i18n="club.p2n">1 grátis</b><span data-i18n="club.p2">a cada 10 cafés tomados no salão</span></li>
+          <li><b data-i18n="club.p3n">R$ 0</b><span data-i18n="club.p3">de frete para quem assina</span></li>
+        </ul>
+        <form class="club-form" id="clubForm" novalidate>
+          <label class="sr" for="clubEmail" data-i18n="club.email">Seu e-mail</label>
+          <input id="clubEmail" type="email" autocomplete="email" maxlength="120" placeholder="Seu e-mail" data-i18n-attr="placeholder:club.email">
+          <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="btn gold magnetic" type="submit" data-i18n="club.join">Entrar para o clube</button>
+        </form>
+        <p class="f-msg" id="clubMsg" aria-live="polite"></p>
+        <p class="f-note legal"><span data-i18n="legal.club">Enviamos só o e-mail de boas-vindas com o cupom.</span> <a href="privacidade" data-i18n="legal.link">Política de privacidade</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. The house -->
+  <section class="sec salao" id="salao">
+    <div class="salao-grid">
+      <figure class="salao-img reveal">
+        <img srcset="assets/img/salao-s.webp 800w, assets/img/salao.webp 1448w" sizes="(max-width: 980px) 92vw, 56vw" src="assets/img/salao.webp" alt="Vista de cima do salão da Caffè D’oro, com vinte mesas, poltronas de couro, plantas e o balcão de mármore ao fundo." data-i18n-attr="alt:sal.alt" width="1448" height="1086" loading="lazy" decoding="async">
+      </figure>
+      <div class="salao-text reveal">
+        <p class="kicker"><span class="k-num">05</span><span data-i18n="sal.kick">O salão</span></p>
+        <h2 class="display rv" data-i18n="sal.h">Um lugar feito<br>para ficar.</h2>
+        <p class="lede" data-i18n="sal.p">Vinte mesas, luz baixa, poltronas de couro e um balcão de mármore onde o café é tirado na sua frente. Venha para uma conversa longa, uma reunião tranquila ou só para ler em paz.</p>
+        <div class="menu-card">
+          <p class="menu-title" data-i18n="sal.menu">No balcão</p>
+          <ul>
+            <li><span>Espresso</span><i></i><b>R$ 7</b></li>
+            <li><span>Macchiato</span><i></i><b>R$ 8</b></li>
+            <li><span>Cappuccino</span><i></i><b>R$ 10</b></li>
+            <li><span>Latte</span><i></i><b>R$ 14</b></li>
+          </ul>
+          <p class="menu-foot" data-i18n="sal.foot">Doces da casa, feitos todos os dias.</p>
+        </div>
+        <p class="hours" data-i18n="sal.hours">Seg a sáb, 8h às 22h · Dom, 9h às 20h</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Reservation on the real floor plan -->
+  <section class="sec reserva" id="reservar">
+    <div class="wrap">
+      <header class="sec-head split-head reveal">
+        <div>
+          <p class="kicker"><span class="k-num">06</span><span data-i18n="res.kick">Reservas</span></p>
+          <h2 class="display rv" data-i18n="res.h">Escolha a sua mesa.</h2>
+        </div>
+        <p class="lede" data-i18n="res.lede">Toque em uma mesa na planta do salão. As douradas estão livres para o dia e o horário que você escolher.</p>
+      </header>
+      <div class="res-grid">
+        <div class="plan reveal">
+          <div class="plan-box" id="planBox">
+            <img src="assets/img/planta.webp" alt="Planta do salão vista de cima, com as mesas numeradas de 1 a 20." data-i18n-attr="alt:res.alt" width="1165" height="870" loading="lazy" decoding="async">
+            <svg class="plan-svg" id="planSvg" viewBox="0 0 1165 870" aria-hidden="true"></svg>
+            <div class="plan-hit" id="planHit"></div>
+          </div>
+          <ul class="legend" aria-label="Legenda" data-i18n-attr="aria-label:res.legend">
+            <li><i class="lg free"></i><span data-i18n="res.free">Livre</span></li>
+            <li><i class="lg busy"></i><span data-i18n="res.busy">Reservada</span></li>
+            <li><i class="lg sel"></i><span data-i18n="res.sel">Sua escolha</span></li>
+          </ul>
+          <p class="plan-chip" id="planChip" aria-live="polite">Nenhuma mesa escolhida ainda.</p>
+        </div>
+        <div class="res-panel reveal" id="resPanel">
+          <form class="res-form" id="resForm" novalidate>
+            <p class="panel-title" data-i18n="res.title">Sua reserva</p>
+            <div class="f-row">
+              <label class="field"><span data-i18n="res.date">Data</span><input type="date" id="rDate" required></label>
+              <label class="field"><span data-i18n="res.time">Horário</span><select id="rTime" required></select></label>
+            </div>
+            <label class="field"><span data-i18n="res.people">Pessoas</span><select id="rPeople"></select></label>
+            <label class="field m-only"><span data-i18n="res.list">Ou escolha pela lista</span><select id="rTableList"></select></label>
+            <label class="field"><span data-i18n="res.name">Seu nome</span><input type="text" id="rName" autocomplete="name" maxlength="60" placeholder="Como devemos chamar você" data-i18n-attr="placeholder:res.namePh" required></label>
+            <div class="f-row">
+              <label class="field"><span data-i18n="res.phone">WhatsApp</span><input type="tel" id="rPhone" autocomplete="tel" inputmode="tel" maxlength="16" placeholder="(11) 90000-0000" required></label>
+              <label class="field"><span data-i18n="res.email">E-mail</span><input type="email" id="rEmail" autocomplete="email" maxlength="120" placeholder="voce@email.com" data-i18n-attr="placeholder:res.emailPh" required></label>
+            </div>
+            <input class="hp" type="text" name="website" id="rHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <p class="f-msg" id="rMsg" aria-live="polite"></p>
+            <button class="btn gold wide" type="submit" id="rSubmit">Reservar mesa</button>
+            <p class="f-note" data-i18n="res.hold">Guardamos a mesa por 15 minutos depois do horário.</p>
+            <p class="f-note legal"><span data-i18n="legal.res">Usamos seu e-mail e WhatsApp só para confirmar esta reserva. Os dados são apagados 7 dias depois.</span> <a href="privacidade" data-i18n="legal.link">Política de privacidade</a></p>
+          </form>
+          <div class="res-done" id="resDone" hidden tabindex="-1">
+            <svg class="done-ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" pathLength="1"/><path d="M27 41l9 9 17-19" pathLength="1"/></svg>
+            <p class="panel-title" id="doneTitle"></p>
+            <p class="done-code" id="doneCode"></p>
+            <p class="done-sum" id="doneSum"></p>
+            <p class="done-mail" id="doneMail"><svg width="18" height="18" aria-hidden="true"><use href="#i-mail"/></svg><span></span></p>
+            <div class="done-acts">
+              <a class="btn gold wide" id="resCal" href="#" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" aria-hidden="true"><use href="#i-cal"/></svg><span data-i18n="res.cal">Salvar na agenda</span></a>
+              <a class="btn ghost wide wa-btn" id="resWa" href="#" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="res.wa">Confirmar no WhatsApp</span></a>
+            </div>
+            <button class="link-btn" type="button" id="resAgain" data-i18n="res.again">Fazer outra reserva</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Delivery -->
+  <section class="sec entrega" id="entrega">
+    <div class="wrap ent-grid">
+      <div class="radius reveal" aria-hidden="true">
+        <svg viewBox="0 0 520 520" class="radius-svg" id="radiusSvg">
+          <circle class="rg r4" cx="260" cy="260" r="236" pathLength="1"/>
+          <circle class="rg r3" cx="260" cy="260" r="177" pathLength="1"/>
+          <circle class="rg r2" cx="260" cy="260" r="118" pathLength="1"/>
+          <circle class="rg r1" cx="260" cy="260" r="59" pathLength="1"/>
+          <path class="sweep" d="M260 260 L260 24 A236 236 0 0 1 427 93 Z"/>
+          <g class="places">
+            <text x="182" y="170">Pinheiros</text><text x="92" y="118">Vila Madalena</text><text x="318" y="198">Paulista</text>
+            <text x="352" y="328">Paraíso</text><text x="296" y="410">Moema</text><text x="142" y="344">Itaim Bibi</text>
+            <text x="376" y="120">Consolação</text><text x="190" y="470">Brooklin</text><text x="412" y="440">Vila Mariana</text><text x="60" y="262">Butantã</text>
+          </g>
+          <circle class="home-pulse" cx="260" cy="260" r="10"/>
+          <circle class="home" cx="260" cy="260" r="5"/>
+          <text class="home-label" x="274" y="252">Caffè D’oro</text>
+          <text class="km" x="260" y="16">10 km</text>
+          <g class="you" id="youPin" transform="translate(-100 -100)"><circle class="you-halo" r="16"/><circle class="you-dot" r="6"/><text class="you-label" x="12" y="-10" data-i18n="ent.you">Você</text></g>
+        </svg>
+      </div>
+      <div class="ent-text reveal">
+        <p class="kicker"><span class="k-num">07</span><span data-i18n="ent.kick">Entrega</span></p>
+        <h2 class="display rv" data-i18n="ent.h">Chega fresco.<br>Chega hoje.</h2>
+        <p class="lede" data-i18n="ent.lede">Atendemos até 10&nbsp;km da nossa loja nos Jardins. Pedidos feitos até as 16h saem no mesmo dia, direto da torra para a sua porta.</p>
+        <ol class="steps">
+          <li><b>1</b><span data-i18n="ent.s1">Escolha seus cafés na loja.</span></li>
+          <li><b>2</b><span data-i18n="ent.s2">Feche o pedido até as 16h.</span></li>
+          <li><b>3</b><span data-i18n="ent.s3">Receba em casa no mesmo dia.</span></li>
+        </ol>
+        <form class="cep" id="cepForm" novalidate>
+          <label for="cepIn" data-i18n="ent.cep">Confira seu CEP</label>
+          <div class="cep-row">
+            <input id="cepIn" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9">
+            <button class="btn gold" type="submit" data-i18n="ent.check">Verificar</button>
+          </div>
+          <p class="cep-out" id="cepOut" aria-live="polite"></p>
+        </form>
+        <p class="f-note" data-i18n="ent.ship">Frete grátis acima de R$ 150. Abaixo disso, R$ 12.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Reviews -->
+  <section class="sec provas" id="provas">
+    <div class="wrap rev-head reveal">
+      <p class="kicker"><span class="k-num">08</span><span data-i18n="rev.kick">Quem já provou</span></p>
+      <div class="rev-nav">
+        <button class="icon-btn" type="button" id="revPrev" aria-label="Depoimento anterior" data-i18n-attr="aria-label:rev.prev"><svg class="flip" width="20" height="20"><use href="#i-arrow"/></svg></button>
+        <button class="icon-btn" type="button" id="revNext" aria-label="Próximo depoimento" data-i18n-attr="aria-label:rev.next"><svg width="20" height="20"><use href="#i-arrow"/></svg></button>
+      </div>
+    </div>
+    <div class="rev-track" id="revTrack" tabindex="0">
+      <figure class="rev"><p class="stars" role="img" aria-label="5 de 5 estrelas" data-i18n-attr="aria-label:rev.stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></p><blockquote data-i18n="rev.1">Chegou em casa com a data de torra de três dias antes. Nunca mais comprei café de mercado.</blockquote><figcaption>Marina A. · Pinheiros</figcaption></figure>
+      <figure class="rev"><p class="stars" role="img" aria-label="5 de 5 estrelas" data-i18n-attr="aria-label:rev.stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></p><blockquote data-i18n="rev.2">Reservei a mesa 11 para um aniversário de dez pessoas. Ninguém veio apressar a conta.</blockquote><figcaption>Rafael T. · Jardins</figcaption></figure>
+      <figure class="rev"><p class="stars" role="img" aria-label="5 de 5 estrelas" data-i18n-attr="aria-label:rev.stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></p><blockquote data-i18n="rev.3">O Geisha é outro mundo. Floral de verdade, sem precisar imaginar.</blockquote><figcaption>Beatriz L. · Vila Mariana</figcaption></figure>
+      <figure class="rev"><p class="stars" role="img" aria-label="5 de 5 estrelas" data-i18n-attr="aria-label:rev.stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></p><blockquote data-i18n="rev.4">Pedi às 14h e às 18h o café estava na minha porta, ainda com cheiro de torra.</blockquote><figcaption>Carlos M. · Itaim Bibi</figcaption></figure>
+      <figure class="rev"><p class="stars" role="img" aria-label="5 de 5 estrelas" data-i18n-attr="aria-label:rev.stars"><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg><svg><use href="#i-star"/></svg></p><blockquote data-i18n="rev.5">A xícara Folhagem virou a peça favorita da minha cozinha.</blockquote><figcaption>Luísa P. · Paraíso</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 9. FAQ -->
+  <section class="sec faq" id="duvidas">
+    <div class="wrap faq-grid">
+      <header class="reveal">
+        <p class="kicker"><span class="k-num">09</span><span data-i18n="faq.kick">Dúvidas</span></p>
+        <h2 class="display rv" data-i18n="faq.h">Antes de pedir.</h2>
+      </header>
+      <div class="faq-list reveal">
+        <details><summary data-i18n="faq.q1">Qual moagem devo escolher?</summary><div class="a"><p data-i18n="faq.a1">O moído da casa é médio-fino, ideal para coador de papel e cafeteira elétrica. Para espresso ou prensa francesa, leve em grãos e escolha a moagem na hora de comprar. Moemos no dia da entrega.</p></div></details>
+        <details><summary data-i18n="faq.q2">As cápsulas servem na minha máquina?</summary><div class="a"><p data-i18n="faq.a2">A caixa indica o sistema compatível. Se tiver dúvida, chame a gente no WhatsApp com o modelo da sua máquina antes de comprar.</p></div></details>
+        <details><summary data-i18n="faq.q3">Como sei que o café é fresco?</summary><div class="a"><p data-i18n="faq.a3">Torramos às segundas e quintas. A data da torra vem impressa em cada pacote, e nada sai daqui com mais de 20 dias.</p></div></details>
+        <details><summary data-i18n="faq.q4">Até onde vocês entregam?</summary><div class="a"><p data-i18n="faq.a4">Até 10 km da loja, nos Jardins. Coloque seu CEP na seção de entrega para conferir na hora.</p></div></details>
+        <details><summary data-i18n="faq.q5">Como funciona a assinatura?</summary><div class="a"><p data-i18n="faq.a5">Você recebe o mesmo café a cada 15 dias, com frete grátis sempre. Dá para pausar ou cancelar quando quiser, sem multa.</p></div></details>
+        <details><summary data-i18n="faq.q6">Preciso reservar para ir ao salão?</summary><div class="a"><p data-i18n="faq.a6">Não, mas quem reserva não espera. A mesa fica guardada por 15 minutos depois do horário marcado.</p></div></details>
+        <details><summary data-i18n="faq.q7">E se o pedido chegar com algum problema?</summary><div class="a"><p data-i18n="faq.a7">A gente troca no mesmo dia. Basta mandar uma foto pelo WhatsApp.</p></div></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. Final call -->
+  <section class="sec final" id="final">
+    <div class="fbeans" aria-hidden="true">
+      <i class="fb near f1"><img src="assets/img/gb-6.webp" alt="" loading="lazy" width="148" height="200"></i>
+      <i class="fb f2"><img src="assets/img/gb-2.webp" alt="" loading="lazy" width="120" height="200"></i>
+      <i class="fb x-lite f3"><img src="assets/img/gb-4.webp" alt="" loading="lazy" width="120" height="200"></i>
+      <i class="fb near f4"><img src="assets/img/gbb-1.webp" alt="" loading="lazy" width="190" height="240"></i>
+    </div>
+    <p class="corner tl" aria-hidden="true"><span data-i18n="fin.c1">Boa conversa</span><span data-i18n="fin.c2">Bom café</span><span data-i18n="fin.c3">Bom tempo</span></p>
+    <p class="corner tr" aria-hidden="true"><span>Jardins</span><span>São Paulo</span><span>2026</span></p>
+    <div class="wrap center reveal">
+      <img class="final-mark" src="assets/img/grao-ouro.webp" alt="" width="120" height="110" loading="lazy">
+      <p class="script" data-i18n="fin.script">Café é sempre uma boa ideia.</p>
+      <h2 class="display rv" data-i18n="fin.h">Sua mesa está esperando.</h2>
+      <div class="cta-row center">
+        <a class="btn gold magnetic" href="#reservar" data-i18n="hero.cta1">Reservar mesa</a>
+        <a class="btn ghost magnetic" href="#cafes" data-i18n="hero.cta2">Comprar café</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <img src="assets/img/grao-ouro.webp" alt="" width="48" height="44" loading="lazy">
+      <p class="foot-name">Caffè D’oro</p>
+      <p class="foot-tag" data-i18n="foot.tag">Cafés extraordinários</p>
+    </div>
+    <div>
+      <p class="foot-h" data-i18n="foot.address">Endereço</p>
+      <p>Alameda dos Cafezais, 180<br>Jardins, São Paulo</p>
+    </div>
+    <div>
+      <p class="foot-h" data-i18n="foot.hours">Horário</p>
+      <p><span data-i18n="foot.h1">Seg a sáb, 8h às 22h</span><br><span data-i18n="foot.h2">Dom, 9h às 20h</span></p>
+    </div>
+    <div>
+      <p class="foot-h" data-i18n="foot.nav">Navegue</p>
+      <p class="foot-links"><a href="#cafes" data-i18n="nav.cafes">Cafés</a><a href="#reservar" data-i18n="nav.reserve">Reservar mesa</a><a href="#entrega" data-i18n="nav.entrega">Entrega</a><a href="#duvidas" data-i18n="nav.faq">Dúvidas</a></p>
+    </div>
+  </div>
+  <div class="wrap studio" id="contato">
+    <div class="studio-card">
+      <div class="cham" id="cham" aria-hidden="true">
+        <div class="cham-rig">
+          <div class="cham-breath">
+            <img class="cham-body" src="assets/img/sh-body.webp" alt="" width="380" height="328" loading="lazy" decoding="async">
+            <span class="cham-sheen"></span>
+            <span class="cham-eye"><img src="assets/img/sh-eye.webp" alt="" width="160" height="160" loading="lazy" decoding="async"></span>
+            <i class="glint g1"></i><i class="glint g2"></i><i class="glint g3"></i><i class="glint g4"></i>
+          </div>
+          <svg class="cham-tongue" viewBox="0 0 1260 900"><path d="M952 346 C 1010 326 1076 322 1148 330" pathLength="1"/><circle cx="1150" cy="330" r="15"/></svg>
+          <img class="cham-bean" src="assets/img/gb-5.webp" alt="" width="148" height="200" loading="lazy">
+        </div>
+      </div>
+      <div class="studio-info">
+        <p class="studio-kick" data-i18n="foot.credit">Conceito, design e desenvolvimento</p>
+        <p class="studio-name">SHINNARE</p>
+        <p class="studio-text" data-i18n="studio.text">Gostou do que viu? Chame a gente no WhatsApp e tire o seu projeto do papel.</p>
+        <ul class="team">
+          <li><a class="wa-card" data-wa="5511933914350" href="https://wa.me/5511933914350" target="_blank" rel="noopener noreferrer"><svg width="22" height="22" aria-hidden="true"><use href="#i-wa"/></svg><span><b>Gustavo Steferson de Souza Rocha</b><small>(11) 93391-4350</small></span></a></li>
+          <li><a class="wa-card" data-wa="5511968326459" href="https://wa.me/5511968326459" target="_blank" rel="noopener noreferrer"><svg width="22" height="22" aria-hidden="true"><use href="#i-wa"/></svg><span><b>Guilherme Silva de Oliveira</b><small>(11) 96832-6459</small></span></a></li>
+          <li><a class="wa-card" data-wa="5511934361722" href="https://wa.me/5511934361722" target="_blank" rel="noopener noreferrer"><svg width="22" height="22" aria-hidden="true"><use href="#i-wa"/></svg><span><b>Kevin Araujo Paiva de Souza</b><small>(11) 93436-1722</small></span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <p data-i18n="foot.disc">Caffè D’oro é uma marca fictícia, criada pela SHINNARE como projeto de portfólio. Reservas e pedidos feitos aqui são demonstrações e não geram cobrança.</p>
+    <p class="foot-legal"><a href="privacidade" data-i18n="legal.link">Política de privacidade</a><span data-i18n="foot.copy">© 2026 Caffè D’oro · Um projeto SHINNARE</span></p>
+  </div>
+</footer>
+
+<!-- Quick view -->
+<div class="veil" id="veil" hidden></div>
+<div class="qv" id="qv" role="dialog" aria-modal="true" aria-labelledby="qvName" hidden>
+  <div class="qv-panel">
+    <button class="icon-btn qv-x" type="button" id="qvClose" aria-label="Fechar detalhes" data-i18n-attr="aria-label:qv.close"><svg width="20" height="20"><use href="#i-close"/></svg></button>
+    <div class="qv-media">
+      <div class="halo" aria-hidden="true"></div>
+      <img id="qvImg" alt="" width="640" height="760">
+      <div class="qv-thumbs" id="qvThumbs"></div>
+    </div>
+    <div class="qv-info">
+      <p class="kicker" id="qvTag"></p>
+      <h3 class="qv-name" id="qvName"></h3>
+      <p class="qv-line" id="qvLine"></p>
+      <ul class="v-notes" id="qvNotes"></ul>
+      <div class="v-int" id="qvInt"></div>
+      <fieldset class="opt" id="qvFmt"><legend data-i18n="qv.format">Formato</legend><div class="opt-row" id="qvFmtRow"></div></fieldset>
+      <fieldset class="opt" id="qvGrind"><legend data-i18n="qv.grind">Moagem</legend><div class="opt-row four" id="qvGrindRow"></div></fieldset>
+      <fieldset class="opt" id="qvBuy"><legend data-i18n="qv.buy">Como comprar</legend><div class="opt-row two" id="qvBuyRow"></div><p class="opt-note" id="qvSubNote" data-i18n="buy.subNote">Frete grátis sempre. Cancele quando quiser.</p></fieldset>
+      <div class="qv-buyrow">
+        <div class="stepper-q" role="group" aria-label="Quantidade" data-i18n-attr="aria-label:qv.qty">
+          <button type="button" id="qvLess" aria-label="Diminuir quantidade" data-i18n-attr="aria-label:qv.less"><svg width="16" height="16"><use href="#i-minus"/></svg></button>
+          <output id="qvQty">1</output>
+          <button type="button" id="qvMore" aria-label="Aumentar quantidade" data-i18n-attr="aria-label:qv.more"><svg width="16" height="16"><use href="#i-plus"/></svg></button>
+        </div>
+        <button class="btn gold grow" type="button" id="qvAdd">Adicionar à sacola</button>
+      </div>
+      <p class="fresh" data-i18n="qv.fresh">Torra desta semana · Entrega hoje em até 10 km</p>
+    </div>
+  </div>
+</div>
+
+<!-- Bag and checkout -->
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" hidden>
+  <div class="dr-head">
+    <p class="dr-title" id="drawerTitle" data-i18n="bag.title">Sua sacola</p>
+    <button class="icon-btn" type="button" id="drawerClose" aria-label="Fechar sacola" data-i18n-attr="aria-label:bag.close"><svg width="20" height="20"><use href="#i-close"/></svg></button>
+  </div>
+  <ol class="stepper" id="stepper">
+    <li class="on"><b>1</b><span data-i18n="step.1">Sacola</span></li>
+    <li><b>2</b><span data-i18n="step.2">Entrega</span></li>
+    <li><b>3</b><span data-i18n="step.3">Pagamento</span></li>
+    <li><b>4</b><span data-i18n="step.4">Pronto</span></li>
+  </ol>
+  <div class="dr-body" id="drBody">
+    <section class="dr-view" id="vCart">
+      <div class="ship-bar" id="shipBar"><p id="shipText"></p><span class="sb-track"><i id="shipFill"></i></span></div>
+      <ul class="cart-list" id="cartList"></ul>
+      <div class="cart-empty" id="cartEmpty">
+        <img src="assets/img/grao-ouro.webp" alt="" width="64" height="58" loading="lazy">
+        <p data-i18n="bag.empty">Sua sacola está vazia.</p>
+        <a class="btn ghost" href="#cafes" data-close data-i18n="bag.browse">Ver os cafés</a>
+      </div>
+      <form class="coupon" id="couponForm" novalidate>
+        <label for="couponIn" data-i18n="bag.coupon">Cupom</label>
+        <div class="coupon-row"><input id="couponIn" autocomplete="off" placeholder="BEMVINDO"><button class="btn ghost small" type="submit" data-i18n="bag.apply">Aplicar</button></div>
+        <p class="f-msg" id="couponMsg" aria-live="polite"></p>
+      </form>
+    </section>
+    <form class="dr-view" id="vShip" hidden novalidate>
+      <label class="field"><span data-i18n="co.name">Nome</span><input id="cName" autocomplete="name" maxlength="60" required></label>
+      <label class="field"><span data-i18n="co.phone">WhatsApp</span><input id="cPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="16" placeholder="(11) 90000-0000" required></label>
+      <div class="f-row">
+        <label class="field"><span data-i18n="co.cep">CEP</span><input id="cCep" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" required></label>
+        <label class="field"><span data-i18n="co.num">Número</span><input id="cNum" autocomplete="address-line2" maxlength="10" required></label>
+      </div>
+      <p class="co-addr" id="cAddr" aria-live="polite"></p>
+      <label class="field"><span data-i18n="co.comp">Complemento</span><input id="cComp" maxlength="60" placeholder="Apto, bloco (opcional)" data-i18n-attr="placeholder:co.compPh"></label>
+      <fieldset class="opt"><legend data-i18n="co.window">Janela de entrega</legend><div class="opt-row col" id="winRow"></div></fieldset>
+      <input class="hp" type="text" name="website" id="cHp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="f-msg" id="shipMsg" aria-live="polite"></p>
+      <p class="f-note legal"><span data-i18n="legal.order">Seus dados servem só para esta entrega e são apagados em 30 dias.</span> <a href="privacidade" data-i18n="legal.link">Política de privacidade</a></p>
+    </form>
+    <form class="dr-view" id="vPay" hidden novalidate>
+      <fieldset class="opt"><legend class="sr" data-i18n="step.3">Pagamento</legend>
+        <div class="opt-row two">
+          <label><input type="radio" name="pay" value="pix" checked><span data-i18n="pay.pix">Pix</span></label>
+          <label><input type="radio" name="pay" value="card"><span data-i18n="pay.card">Cartão na entrega</span></label>
+        </div>
+      </fieldset>
+      <div class="pix" id="pixBox">
+        <div class="pix-idle" id="pixIdle">
+          <svg class="pix-ic" width="26" height="26" aria-hidden="true"><use href="#i-lock"/></svg>
+          <p class="f-note" data-i18n="pay.pixIdle">Ao continuar, geramos um QR Code Pix de demonstração. Aponte a câmera do celular, toque em “Confirmar pagamento” e esta tela atualiza sozinha. Nada é cobrado.</p>
+        </div>
+        <div class="pix-live" id="pixLive" hidden>
+          <div class="qr-wrap"><svg class="qr" id="qr" role="img" aria-label="QR Code do Pix" data-i18n-attr="aria-label:pay.qrAria"></svg><span class="qr-scan" aria-hidden="true"></span></div>
+          <div class="pix-side">
+            <p class="pix-state" id="pixState" aria-live="polite"><i></i><span data-i18n="pay.waiting">Aguardando pagamento</span></p>
+            <p class="pix-meta"><span data-i18n="pay.expires">Expira em</span> <b id="pixTimer">15:00</b> · <span id="pixOrder"></span></p>
+            <div class="pix-btns">
+              <a class="btn gold small" id="pixOpen" href="#" target="_blank" rel="noopener"><svg width="16" height="16" aria-hidden="true"><use href="#i-phone"/></svg><span data-i18n="pay.open">Pagar neste celular</span></a>
+              <button class="btn ghost small" type="button" id="pixCopy"><svg width="16" height="16" aria-hidden="true"><use href="#i-copy"/></svg><span data-i18n="pay.copyLink">Copiar link</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="pix-paid" id="pixPaid" hidden>
+          <svg class="done-ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" pathLength="1"/><path d="M27 41l9 9 17-19" pathLength="1"/></svg>
+          <p class="panel-title" data-i18n="pay.paid">Pagamento confirmado</p>
+        </div>
+      </div>
+      <p class="f-msg" id="payMsg" aria-live="polite"></p>
+      <p class="f-note" id="cardNote" hidden data-i18n="pay.cardNote">O entregador leva a maquininha. Aceitamos crédito e débito.</p>
+      <div class="summary"><p class="sum-h"><span data-i18n="pay.summary">Resumo</span><span id="sumCount"></span></p><ul id="sumList"></ul><p class="sum-addr" id="sumAddr"></p></div>
+    </form>
+    <section class="dr-view co-done" id="vDone" hidden tabindex="-1">
+      <svg class="done-ring" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="34" pathLength="1"/><path d="M27 41l9 9 17-19" pathLength="1"/></svg>
+      <p class="panel-title" id="coTitle"></p>
+      <p class="done-sum" id="coSum"></p>
+      <ol class="timeline" id="timeline">
+        <li class="on"><i></i><span data-i18n="done.t1">Pedido recebido</span><time id="tl1"></time></li>
+        <li class="now"><i></i><span data-i18n="done.t2">Separando seus cafés</span><time id="tl2"></time></li>
+        <li><i></i><span data-i18n="done.t3">Saiu para entrega</span><time></time></li>
+        <li><i></i><span data-i18n="done.t4">Entregue</span><time></time></li>
+      </ol>
+      <a class="btn gold wide wa-btn" id="coWa" href="#" target="_blank" rel="noopener noreferrer"><svg width="18" height="18" aria-hidden="true"><use href="#i-wa"/></svg><span data-i18n="done.wa">Acompanhar pelo WhatsApp</span></a>
+      <a class="btn ghost wide" href="#cafes" data-close data-i18n="done.more">Continuar na loja</a>
+      <p class="f-note" data-i18n="done.note">Isto é uma demonstração: nenhum valor foi cobrado e nada será entregue.</p>
+    </section>
+  </div>
+  <div class="dr-foot" id="drFoot">
+    <dl class="totals">
+      <div><dt data-i18n="bag.sub">Subtotal</dt><dd id="tSub">R$ 0,00</dd></div>
+      <div id="tDiscRow" hidden><dt data-i18n="bag.disc">Desconto</dt><dd id="tDisc"></dd></div>
+      <div><dt data-i18n="bag.ship">Frete</dt><dd id="tShip">R$ 0,00</dd></div>
+      <div class="grand"><dt data-i18n="bag.total">Total</dt><dd id="tTotal">R$ 0,00</dd></div>
+    </dl>
+    <div class="dr-btns">
+      <button class="btn ghost small" type="button" id="drBack" data-i18n="bag.back" hidden>Voltar</button>
+      <button class="btn gold wide" type="button" id="drMain" data-i18n="bag.continue">Continuar</button>
+    </div>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/i18n.js?v=3" defer></script>
+<script src="assets/qr.js?v=3" defer></script>
+<script src="assets/site.js?v=3" defer></script>
+</body>
+</html>

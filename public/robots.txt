@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /pix
+
+Sitemap: https://caffedoro-shinnare.vercel.app/sitemap.xml

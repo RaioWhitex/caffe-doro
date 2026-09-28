@@ -207,11 +207,6 @@ html:not(.lite) .nav.solid{backdrop-filter:blur(14px) saturate(1.2)}
 .stage::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 55% at 50% 48%,var(--glow-a),transparent 70%)}
 .scene{position:absolute;inset:0;pointer-events:none;z-index:1}
 .sA,.sB,.sC,.cue,.b1,.b2,.b3{display:none}
-.cover{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
-.cover img{width:100%;height:100%;object-fit:cover}
-.cover.land{width:max(100vw,calc(100vh * 1.7768));width:max(100vw,calc(100svh * 1.7768));aspect-ratio:1672/941}
-.cover.port{display:none;width:max(100vw,calc(100vh * .5628));width:max(100vw,calc(100svh * .5628));aspect-ratio:820/1457}
-@media (max-aspect-ratio:4/5){.cover.land{display:none}.cover.port{display:block}}
 .steam{position:absolute;left:var(--x);top:var(--y);width:9%;height:26%;transform:translate(-50%,-100%);pointer-events:none}
 .steam i{position:absolute;left:30%;bottom:0;width:40%;height:60%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,238,214,.22),rgba(255,238,214,0));opacity:0;animation:steam 7s ease-in-out infinite}
 .steam i:nth-child(2){left:10%;animation-delay:-2.3s;animation-duration:8.4s}
@@ -791,12 +786,53 @@ html:not(.lite) .plan-svg .sel-ring{filter:drop-shadow(0 0 8px rgba(243,207,126,
 html:not(.scrub) .burst,html:not(.scrub) .burst-bg{display:none}
 html.scrub .sA .logo-wrap{z-index:1}
 
-/* the settle band: a film loops behind the headline */
-.sd-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.4s var(--ease)}
-.sd-video.on{opacity:1}
-.sd-sweep{position:absolute;inset:-20%;z-index:1;pointer-events:none;background:linear-gradient(112deg,transparent 40%,rgba(255,224,160,.14) 49%,rgba(255,240,205,.22) 50%,rgba(255,224,160,.14) 51%,transparent 60%);transform:translateX(-70%);animation:sweep 8s var(--ease-io) infinite}
-@keyframes sweep{0%,50%{transform:translateX(-70%)}100%{transform:translateX(70%)}}
-.embers{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none}
+/* the settle band: the brand mark with gold beans circling it. Pure CSS transforms, no video, no canvas.
+   Each bean rides two eased oscillations a quarter turn apart (an ellipse); it grows and moves in front of the mark
+   on the near half of the orbit and slips behind it on the far half. */
+.sD{background:radial-gradient(40% 56% at 73% 52%,rgba(168,110,42,.3),rgba(92,52,20,.16) 48%,rgba(19,12,8,0) 76%),radial-gradient(130% 110% at 60% 50%,#1b110a 0%,#0e0906 100%)}
+.orbit{position:absolute;left:calc(100% + 2vw);top:50%;width:calc(100vw - var(--gutter) * 2 - 100% - 2vw);height:min(80vh,760px);transform:translateY(-50%);display:grid;place-items:center;pointer-events:none;container-type:size;text-shadow:none}
+.orbit-core{position:relative;width:min(100cqw,130cqh);aspect-ratio:1.3;container-type:size}
+.orb-halo{position:absolute;left:50%;top:50%;width:84cqw;height:84cqw;margin:-42cqw 0 0 -42cqw;border-radius:50%;background:radial-gradient(closest-side,rgba(240,186,92,.34),rgba(217,167,74,.13) 44%,rgba(217,167,74,0) 72%);animation:orbHalo 5s ease-in-out infinite}
+@keyframes orbHalo{0%,100%{transform:scale(.9);opacity:.72}50%{transform:scale(1.06);opacity:1}}
+.orb-mark{position:absolute;left:50%;top:50%;z-index:2;width:56cqw;transform:translate(-50%,-50%);animation:orbFloat 6s ease-in-out infinite}
+.orb-logo{width:100%;height:auto}
+@keyframes orbFloat{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-54%)}}
+.orb-shine{position:absolute;inset:0;overflow:hidden;-webkit-mask:url(img/logo-s.webp) center/100% 100% no-repeat;mask:url(img/logo-s.webp) center/100% 100% no-repeat}
+.orb-shine::before{content:"";position:absolute;top:-20%;bottom:-20%;left:0;width:30%;background:linear-gradient(90deg,rgba(255,240,200,0),rgba(255,247,226,.7) 50%,rgba(255,240,200,0));transform:translateX(-150%) skewX(-16deg);animation:orbShine 6.5s cubic-bezier(.45,.05,.3,1) infinite}
+@keyframes orbShine{0%,48%{transform:translateX(-150%) skewX(-16deg)}100%{transform:translateX(380%) skewX(-16deg)}}
+.orb{--P:19s;--rx:47cqw;--ry:14cqw;--tilt:-11deg;--s0:.5;--s1:1.12;--bs:11.5cqw;--sp:8s;
+  --dx:calc(var(--P) * var(--f,0) * -1);--dy:calc(var(--P) * (var(--f,0) + .25) * -1);
+  position:absolute;left:50%;top:50%;z-index:0;
+  animation:orbY calc(var(--P) / 2) cubic-bezier(.37,0,.63,1) var(--dy) infinite alternate both,orbZ calc(var(--P) / 2) linear var(--dy) infinite alternate both}
+.orb-x{position:absolute;left:0;top:0;animation:orbX calc(var(--P) / 2) cubic-bezier(.37,0,.63,1) var(--dx) infinite alternate both}
+.orb img{position:absolute;left:0;top:0;width:auto;max-width:none;height:var(--bs);transform:translate(-50%,-50%);animation:orbSpin var(--sp) linear infinite}
+.orb.in{--P:12s;--rx:35cqw;--ry:21cqw;--tilt:27deg;--s0:.42;--s1:.88;--bs:8cqw;--dy:calc(var(--P) * (var(--f,0) - .25) * -1)}
+.orb:nth-child(3){--f:0}
+.orb:nth-child(4){--f:.125;--bs:9.5cqw;--sp:11s}
+.orb:nth-child(5){--f:.25;--sp:6.5s}
+.orb:nth-child(6){--f:.375;--bs:13cqw;--sp:13s}
+.orb:nth-child(7){--f:.5;--sp:9s}
+.orb:nth-child(8){--f:.625;--bs:9.5cqw;--sp:7s}
+.orb:nth-child(9){--f:.75;--bs:12.5cqw;--sp:10s}
+.orb:nth-child(10){--f:.875;--sp:12s}
+.orb:nth-child(11){--f:.06;--sp:5s}
+.orb:nth-child(12){--f:.31;--sp:7.5s}
+.orb:nth-child(13){--f:.56;--sp:6s}
+.orb:nth-child(14){--f:.81;--sp:9.5s}
+.orb:nth-child(even) img{animation-direction:reverse}
+@keyframes orbX{from{transform:translateX(calc(var(--rx) * -1))}to{transform:translateX(var(--rx))}}
+@keyframes orbY{from{transform:rotate(var(--tilt)) translateY(calc(var(--ry) * -1)) scale(var(--s0));opacity:.5}to{transform:rotate(var(--tilt)) translateY(var(--ry)) scale(var(--s1));opacity:1}}
+@keyframes orbZ{0%,49.9%{z-index:0}50%,100%{z-index:4}}
+@keyframes orbSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+.orb-dust,.orb-dust::before{position:absolute;left:50%;top:50%;z-index:3;width:2px;height:2px;border-radius:50%}
+.orb-dust{box-shadow:31cqw -19cqw 0 1px rgba(255,230,170,.9),-38cqw -8cqw 0 .5px rgba(255,220,150,.8),-22cqw 24cqw 0 1px rgba(255,236,190,.85),40cqw 17cqw 0 .5px rgba(255,214,140,.8),6cqw -30cqw 0 .5px rgba(255,236,190,.7),-44cqw 20cqw 0 .5px rgba(255,220,150,.7);animation:orbDust 4.2s ease-in-out infinite}
+.orb-dust::before{content:"";left:0;top:0;box-shadow:-30cqw -22cqw 0 .5px rgba(255,236,190,.85),24cqw 27cqw 0 1px rgba(255,220,150,.8),-8cqw 33cqw 0 .5px rgba(255,230,170,.75),45cqw -4cqw 0 1px rgba(255,236,190,.8),-47cqw -2cqw 0 .5px rgba(255,214,140,.7);animation:orbDust 5.6s ease-in-out -2.4s infinite}
+@keyframes orbDust{0%,100%{opacity:.15;transform:rotate(-4deg)}50%{opacity:1;transform:rotate(4deg)}}
+/* only runs while the band is on screen (JS toggles .settle-on) */
+.orbit *,.orbit *::before{animation-play-state:paused}
+.hero.settle-on .orbit *,.hero.settle-on .orbit *::before{animation-play-state:running}
+html.scrub .b4 .orbit{opacity:var(--kc0,0)}
+html.scrub .b4 .orbit-core{transform:scale(calc(.72 + .28 * var(--k,0)));will-change:transform}
 .live-tag{position:absolute;left:0;top:calc(var(--nav) + 3vh);display:inline-flex;align-items:center;gap:10px;padding:7px 15px 7px 12px;border-radius:999px;background:rgba(10,6,4,.6);border:1px solid rgba(235,193,115,.4);font-size:.64rem;font-weight:500;letter-spacing:.3em;text-transform:uppercase;color:#f4ead9;text-shadow:none}
 .live-tag i{width:8px;height:8px;border-radius:50%;background:#e8584a;animation:live 1.8s ease-out infinite}
 @keyframes live{0%{box-shadow:0 0 0 0 rgba(232,88,74,.6)}100%{box-shadow:0 0 0 11px rgba(232,88,74,0)}}
@@ -816,6 +852,10 @@ html.scrub .b4 .seal .settle-mark{opacity:1;transform:none}
   .b4{padding-top:calc(var(--nav) + 64px)}
   .seal{width:84px;height:84px;margin:0 auto 12px}
   .seal .settle-mark{width:38px}
+  /* on phones the mark sits in the gap between the headline and the buttons; the small seal would repeat it */
+  .b4 .seal{display:none}
+  .orbit{position:relative;left:auto;top:auto;transform:none;flex:1 1 0;align-self:stretch;width:auto;height:auto;min-height:150px;margin:6px calc(var(--gutter) * -1) 10px}
+  .sD{background:radial-gradient(64% 34% at 50% 60%,rgba(168,110,42,.34),rgba(92,52,20,.16) 50%,rgba(19,12,8,0) 80%),radial-gradient(130% 100% at 50% 55%,#1b110a 0%,#0e0906 100%)}
 }
 @media (max-height:560px){.live-tag,.seal{display:none}}
 
@@ -931,6 +971,6 @@ html.scrub .b4 .seal .settle-mark{opacity:1;transform:none}
   .logo-wrap .logo,.il-line{opacity:1!important;transform:none!important}
   .dust,.steam,.cursor{display:none!important}
   .man-text .mw{opacity:1!important}
-  .embers,.sd-sweep,.sd-video,.qr-scan{display:none!important}
+  .orb,.orb-dust,.orb-shine,.qr-scan{display:none!important}
   .gold-text .w{background-position:50% 0!important}
 }

@@ -179,7 +179,7 @@
     docH = 0;
     portrait = matchMedia('(max-aspect-ratio: 4/5)').matches;
     const c = bags.find(b => b.i === 0); bw = c ? c.el.offsetWidth : 200;
-    burst.resize(); embers.resize();
+    burst.resize();
   }
   const heroProgress = () => clamp((scrollY - heroTop) / heroRange, 0, 1);
 
@@ -217,7 +217,6 @@
     put(sD, 'opacity', tD.toFixed(3));
     put(sD, 'transform', `translate3d(0,${((1 - tD) * 0.06 * vh).toFixed(1)}px,0) scale(${(1.16 - 0.16 * easeOut(tD)).toFixed(4)})`);
     settleFx(tD > 0.01 && heroOn);
-    if (p > 0.5) settleFilm.prime();
     cue.classList.toggle('gone', p > 0.02);
   }
   const burstE = p => clamp((p - 0.02) / 0.25, 0, 1);
@@ -408,67 +407,9 @@
     return { kick, resize, go() { goAt = performance.now() / 1000; kick(); } };
   })();
 
-  /* ---------- the settle band: a film at the counter, gold embers, light sweeping by ---------- */
-  const settleFilm = (() => {
-    const vids = [$('#sdVidLand'), $('#sdVidPort')].filter(Boolean);
-    const want = () => (matchMedia('(max-aspect-ratio: 4/5)').matches ? vids[1] : vids[0]);
-    let primed = false, on = false;
-    function source(v) {
-      if (!v || v.dataset.loaded) return;
-      v.dataset.loaded = '1';
-      const base = v.dataset.src;
-      const m = document.createElement('source'); m.src = base + '.mp4'; m.type = 'video/mp4'; v.appendChild(m);
-      v.addEventListener('playing', () => v.classList.add('on'));
-      v.load();
-    }
-    function sync() {
-      vids.forEach(v => {
-        const active = on && v === want();
-        if (active) { source(v); const p = v.play(); if (p) p.catch(() => {}); } else if (!v.paused) v.pause();
-      });
-    }
-    addEventListener('resize', () => { if (on) sync(); });
-    return {
-      prime() { if (!primed && !RM.matches) { primed = true; source(want()); } },
-      set(v) { if (v === on) return; on = v && !RM.matches; sync(); },
-    };
-  })();
-  const embers = (() => {
-    const cv = $('#embers');
-    if (!cv) return { set() {}, resize() {} };
-    const ctx = cv.getContext('2d');
-    const glow = document.createElement('canvas'); glow.width = glow.height = 32;
-    { const g = glow.getContext('2d'), gr = g.createRadialGradient(16, 16, 0, 16, 16, 16);
-      gr.addColorStop(0, 'rgba(255,236,190,1)'); gr.addColorStop(0.25, 'rgba(255,196,110,.8)'); gr.addColorStop(1, 'rgba(255,160,60,0)');
-      g.fillStyle = gr; g.fillRect(0, 0, 32, 32); }
-    const N = LITE ? 26 : 60;
-    const P = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), s: 3 + Math.random() * 9, v: 0.012 + Math.random() * 0.05, ph: Math.random() * 6.3, z: 0.4 + Math.random() }));
-    let W = 0, H = 0, dpr = 1, raf = null, on = false, last = 0, mx = 0, my = 0;
-    function resize() { dpr = Math.min(devicePixelRatio || 1, 1.5); W = cv.clientWidth; H = cv.clientHeight; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
-    addEventListener('pointermove', e => { if (!on) return; mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
-    function frame(now) {
-      raf = null; if (!on || document.hidden) { last = 0; return; }
-      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
-      if (!W) resize();
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-      ctx.globalCompositeOperation = 'lighter';
-      for (const p of P) {
-        p.y -= p.v * dt * p.z; p.x += Math.sin(now / 1000 * 0.8 + p.ph) * 0.0006 * p.z;
-        if (p.y < -0.05) { p.y = 1.05; p.x = Math.random(); }
-        const fl = 0.45 + 0.55 * Math.sin(now / 1000 * (2 + p.z * 3) + p.ph), a = fl * ss(p.y, 0, 0.25) * (1 - ss(p.y, 0.8, 1.05) * 0.6);
-        const x = p.x * W - mx * 40 * p.z, y = p.y * H - my * 30 * p.z, s = p.s * p.z;
-        ctx.globalAlpha = a * 0.85; ctx.drawImage(glow, x - s, y - s, s * 2, s * 2);
-      }
-      ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
-      raf = requestAnimationFrame(frame);
-    }
-    return {
-      resize,
-      set(v) { on = v && !RM.matches; if (on && !raf) raf = requestAnimationFrame(frame); if (!on) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cv.width, cv.height); } },
-    };
-  })();
+  /* ---------- the settle band: the gold mark and its orbiting beans are CSS; they only run while the band shows ---------- */
   let settleOn = null;
-  function settleFx(v) { if (v === settleOn) return; settleOn = v; settleFilm.set(v); embers.set(v); }
+  function settleFx(v) { if (v === settleOn) return; settleOn = v; hero.classList.toggle('settle-on', v); }
 
   /* ================= intro (project presentation) ================= */
   const intro = $('#intro');
@@ -484,7 +425,7 @@
     const enterBtn = $('#introEnter');
     setTimeout(() => enterBtn.focus({ preventScroll: true }), 900);
     const assets = ['assets/img/logo-s.webp', 'assets/img/grao-ouro.webp', 'assets/img/explosao.webp', 'assets/img/gb-1.webp', 'assets/img/gb-2.webp', 'assets/img/gb-3.webp', 'assets/img/gbb-1.webp',
-      innerWidth > 1000 ? 'assets/img/servido.webp' : 'assets/img/servido-m.webp', 'assets/img/xicara-ritual.webp'];
+      'assets/img/gb-5.webp', 'assets/img/xicara-ritual.webp'];
     let done = 0; const total = assets.length + 1;
     const bump = () => {
       done++;
@@ -898,7 +839,10 @@
   })();
   addEventListener('resize', () => { clearTimeout(rit._t); rit._t = setTimeout(rit.measure, 180); });
 
-  /* ================= the coffee ocean: liquid gold that swells and ripples under your hand ================= */
+  /* ================= the coffee river: a current of coffee, crema and gold that you can stir =================
+     Drawn from scratch every frame (no photo): the marbled body slides downstream along a winding course,
+     small fast wavelets ride on top and catch the light, gold dust drifts with the current,
+     and your finger leaves swirls and rings that the river carries away. */
   (() => {
     const sec = $('#oceano'), cv = $('#ocGl');
     if (!sec || !cv || RM.matches) return;
@@ -907,31 +851,49 @@
     if (!gl) return;
     const OCT = LITE ? 3 : 5, NR = 10;
     const VS = 'attribute vec2 p;varying vec2 v;void main(){v=p*.5+.5;gl_Position=vec4(p,0.,1.);}';
-    const FS = `precision highp float;
-uniform sampler2D T;uniform vec2 res;uniform float time,rot,texA,scroll;uniform vec4 rip[${NR}];varying vec2 v;
+    const FS = `#ifdef GL_FRAGMENT_PRECISION_HIGH
+precision highp float;
+#else
+precision mediump float;
+#endif
+uniform vec2 res;uniform float time,ang,scroll;uniform vec4 rip[${NR}];varying vec2 v;
 float h1(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n2(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f);return mix(mix(h1(i),h1(i+vec2(1,0)),u.x),mix(h1(i+vec2(0,1)),h1(i+vec2(1,1)),u.x),u.y);}
+vec3 nd(vec2 p){vec2 i=floor(p),f=fract(p),u=f*f*(3.-2.*f),du=6.*f*(1.-f);float a=h1(i),b=h1(i+vec2(1,0)),c=h1(i+vec2(0,1)),d=h1(i+vec2(1,1)),k=a-b-c+d;return vec3(a+(b-a)*u.x+(c-a)*u.y+k*u.x*u.y,du*vec2(b-a+k*u.y,c-a+k*u.x));}
 float fbm(vec2 p){float s=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<${OCT};i++){s+=a*n2(p);p=m*p;a*=.5;}return s;}
-float H(vec2 p){
-  float t=time,h=sin(dot(p,vec2(1.4,.6))*3.1-t*.9)*.1+sin(dot(p,vec2(-.7,1.3))*4.3+t*.7)*.06;
-  h+=(fbm(p*2.2+vec2(t*.06,-t*.04))-.5)*.34;
-  for(int i=0;i<${NR};i++){vec4 r=rip[i];float age=t-r.z;if(r.w>0.&&age>0.&&age<4.5){float d=length(p-r.xy),f=age*.42;h+=sin((d-f)*36.)*exp(-abs(d-f)*8.)*r.w*exp(-age*1.05)*.16;}}
-  return h;}
-vec2 cover(vec2 uv){float A=res.x/res.y,TA=rot>.5?1./texA:texA;vec2 s=uv-.5;if(A>TA)s.y*=TA/A;else s.x*=A/TA;s*=.9;s+=.5;if(rot>.5)s=vec2(s.y,1.-s.x);return s;}
+vec3 fbmd(vec2 p){float s=0.,a=.5;vec2 g=vec2(0.);mat2 m=mat2(1.6,1.2,-1.2,1.6),J=mat2(1.,0.,0.,1.);for(int i=0;i<${OCT};i++){vec3 k=nd(p);s+=a*k.x;g+=a*(k.yz*J);p=m*p;J=m*J;a*=.5;}return vec3(s,g);}
+float bend(float x){return .14*sin(x*2.1+.7)+.05*sin(x*4.7-1.1);}
 void main(){
-  vec2 asp=vec2(res.x/res.y,1.),p=v*asp;float e=2./res.y;
-  float h=H(p),hx=H(p+vec2(e,0.)),hy=H(p+vec2(0.,e));
-  vec3 n=normalize(vec3(-(hx-h)/e*.022,-(hy-h)/e*.022,1.));
-  vec2 flow=vec2(fbm(p*1.3+time*.05),fbm(p*1.3+vec2(4.2,1.7)-time*.045))-.5;
-  vec2 uv=v+flow*.07+n.xy*.05+vec2(0.,scroll*.1);
-  vec2 tu=cover(uv);tu=abs(mod(tu+1.,2.)-1.);
-  vec3 c=texture2D(T,tu).rgb;
-  vec3 L=normalize(vec3(-.35,.55,.75)),Hv=normalize(L+vec3(0,0,1));
-  float sp=pow(max(dot(n,Hv),0.),90.)*1.05+pow(max(dot(n,normalize(vec3(.5,-.3,.8)+vec3(0,0,1))),0.),28.)*.22;
-  c*=.9+.28*dot(n,L);
-  c+=vec3(1.,.92,.76)*sp;
-  vec2 g=floor(v*res/3.);float r=h1(g),tw=sin(time*(2.+r*6.)+r*40.)*.5+.5;
-  c+=vec3(1.,.88,.58)*step(.986,r)*pow(tw,8.)*smoothstep(.2,.9,dot(n,Hv)+.4)*1.1;
+  float A=res.x/res.y,t=time,cs=cos(ang),sn=sin(ang);
+  mat2 R=mat2(cs,sn,-sn,cs);
+  vec2 p=(v-.5)*vec2(A,1.),dir=vec2(cs,-sn);
+  vec2 sw=vec2(0.),gp=vec2(0.);
+  for(int i=0;i<${NR};i++){vec4 r=rip[i];float age=t-r.z;
+    if(r.w>0.&&age>0.&&age<5.){
+      vec2 dv=p-r.xy-dir*age*.2;float d=length(dv)+1e-4,x=d-age*.36,a0=r.w*exp(-age*.85);
+      gp+=a0*.0036*exp(-abs(x)*10.)*(30.*cos(x*30.)-10.*sign(x)*sin(x*30.))*dv/d;
+      sw+=vec2(-dv.y,dv.x)*a0*exp(-d*d*22.)*.85;}}
+  vec2 q=R*(p+sw);float s=q.x-scroll*.4,n=q.y-bend(q.x);
+  vec3 hs=fbmd(vec2((s-t*.16)*1.3,n*4.2)+vec2(0.,t*.06));
+  vec3 fr=nd(vec2((s-t*.45)*15.,n*9.)+vec2(3.1,7.7));
+  float wv=(s-t*.3)*16.+n*2.;
+  vec2 g=(hs.yz*vec2(1.3,4.2)*.05+fr.yz*vec2(15.,9.)*.0035+vec2(16.,2.)*cos(wv)*.0025)*R+gp;
+  vec3 N=normalize(vec3(-g,1.));
+  float m=fbm(vec2((s-t*.12)*1.05,n*2.7)+vec2(1.6,.8)*hs.x);
+  vec3 c=mix(vec3(.06,.028,.011),vec3(.24,.11,.043),smoothstep(.2,.48,m));
+  c=mix(c,vec3(.5,.27,.105),smoothstep(.48,.66,m));
+  c=mix(c,vec3(.8,.58,.34),smoothstep(.66,.82,m));
+  c=mix(c,vec3(.93,.78,.55),(1.-smoothstep(0.,.02,abs(m-.62)))*.45);
+  float gz=smoothstep(.55,.7,hs.x)*smoothstep(.35,.6,m);
+  c+=vec3(.2,.12,.02)*gz;
+  vec3 rf=reflect(vec3(0.,0.,-1.),N);
+  float win=smoothstep(.1,.24,rf.y)*(1.-smoothstep(.3,.5,rf.y))*smoothstep(-.5,.1,rf.x);
+  c=mix(c,vec3(1.,.87,.64),win*.34);
+  float nh=max(dot(N,normalize(vec3(-.05,.08,1.))),0.);
+  c+=vec3(1.,.94,.82)*pow(nh,700.)*1.8;
+  c*=1.+dot(N.xy,vec2(-.4,.6))*1.2;
+  vec2 gc=floor(vec2(s-t*.12,n)*res.y/2.6);float rr=h1(gc),tw=sin(t*(2.5+rr*7.)+rr*60.)*.5+.5;
+  c+=vec3(1.,.84,.5)*step(.985,rr)*pow(tw,6.)*(.3+gz+smoothstep(.5,.75,m)*.8);
   gl_FragColor=vec4(c,1.);}`;
     const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
     const vs = sh(gl.VERTEX_SHADER, VS), fs = sh(gl.FRAGMENT_SHADER, FS);
@@ -943,29 +905,19 @@ void main(){
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
     const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
     const U = n => gl.getUniformLocation(pr, n);
-    const uRes = U('res'), uTime = U('time'), uRot = U('rot'), uTexA = U('texA'), uScroll = U('scroll'), uRip = U('rip');
-    const tex = gl.createTexture();
-    let ready = false, visible = false, raf = null, t0 = performance.now(), W = 0, H = 0, skip = false;
+    const uRes = U('res'), uTime = U('time'), uAng = U('ang'), uScroll = U('scroll'), uRip = U('rip');
+    let ready = true, visible = false, raf = null, t0 = performance.now(), W = 0, H = 0, skip = false;
     const rips = new Float32Array(NR * 4); let ri = 0, lastRip = 0, lastPt = null, auto = 0;
-    const img = new Image(); img.decoding = 'async';
-    img.onload = () => {
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
-      gl.uniform1f(uTexA, img.naturalWidth / img.naturalHeight);
-      ready = true; sec.classList.add('gl'); kick();
-    };
     function size() {
       const scale = LITE ? 0.5 : Math.min(devicePixelRatio || 1, 1.5) * 0.7;
       W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.max(2, Math.round(W * scale)); cv.height = Math.max(2, Math.round(H * scale));
       gl.viewport(0, 0, cv.width, cv.height);
       gl.uniform2f(uRes, cv.width, cv.height);
-      gl.uniform1f(uRot, W > H ? 1 : 0);            // landscape screens turn the tall photo sideways: more detail, less zoom
+      gl.uniform1f(uAng, 1 - 0.7 * ss(W / Math.max(1, H), 0.5, 1.6));   // tall screens: the river runs down across; wide ones: left to right
     }
     const now = () => (performance.now() - t0) / 1000;
-    function ripple(x, y, amp) {                       // x, y in the shader's space (x scaled by aspect, y up)
+    function ripple(x, y, amp) {                       // x, y in the shader's space: centred, x scaled by aspect, y up
       rips.set([x, y, now(), amp], ri * 4); ri = (ri + 1) % NR;
     }
     function frame() {
@@ -974,18 +926,18 @@ void main(){
       raf = requestAnimationFrame(frame);
       if (LITE && (skip = !skip)) return;            // half rate on simple devices
       const t = now();
-      if (t - auto > 2.6) { auto = t; ripple(Math.random() * W / H, 0.2 + Math.random() * 0.6, 0.45); }
+      if (t - auto > 3.2) { auto = t; ripple((Math.random() - 0.5) * 0.8 * W / H, (Math.random() - 0.5) * 0.7, 0.35); }
       const r = sec.getBoundingClientRect();
       gl.uniform1f(uScroll, clamp(-r.top / Math.max(1, r.height), -1, 1));
       gl.uniform1f(uTime, t);
       gl.uniform4fv(uRip, rips);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      if (!sec.classList.contains('ready')) sec.classList.add('ready');
+      if (!sec.classList.contains('gl')) { sec.classList.add('gl'); setTimeout(() => sec.classList.add('ready'), 1500); }   // fade the river in over the still, then drop the still
     }
     function kick() { if (!raf && visible && ready) raf = requestAnimationFrame(frame); }
     function point(e, strong) {
       const r = cv.getBoundingClientRect(); if (!r.width) return;
-      const x = (e.clientX - r.left) / r.width, y = 1 - (e.clientY - r.top) / r.height;
+      const x = (e.clientX - r.left) / r.width - 0.5, y = 0.5 - (e.clientY - r.top) / r.height;
       const t = performance.now();
       if (!strong && (t - lastRip < 70 || (lastPt && Math.hypot(e.clientX - lastPt[0], e.clientY - lastPt[1]) < 18))) return;
       lastRip = t; lastPt = [e.clientX, e.clientY];
@@ -996,7 +948,7 @@ void main(){
     cv.addEventListener('webglcontextlost', e => { e.preventDefault(); ready = false; sec.classList.remove('gl', 'ready'); });
     new IntersectionObserver(es => es.forEach(e => {
       visible = e.isIntersecting;
-      if (visible) { if (!img.src) img.src = 'assets/img/oceano.webp'; size(); kick(); }
+      if (visible) { size(); kick(); }
     }), { rootMargin: '15% 0px' }).observe(sec);
     addEventListener('resize', () => { if (visible) size(); });
     document.addEventListener('visibilitychange', kick);

@@ -35,4 +35,3 @@ Caffè D’oro é uma marca fictícia, criada pela SHINNARE como projeto de port
 
 - Gustavo Steferson de Souza Rocha · [WhatsApp](https://wa.me/5511933914350)
 - Guilherme Silva de Oliveira · [WhatsApp](https://wa.me/5511968326459)
-- Kevin Araujo Paiva de Souza · [WhatsApp](https://wa.me/5511934361722)

@@ -11,12 +11,11 @@ const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SE
 const SITE = 'https://caffedoro-shinnare.vercel.app';
 const ORIGINS = new Set([SITE, 'http://localhost:8080', 'http://127.0.0.1:8080']);
 const STORE = { lat: -23.5646, lon: -46.6647 };
-// the three SHINNARE partners get a WhatsApp alert for every reservation, order and Pix.
+// the SHINNARE partners get a WhatsApp alert for every reservation, order and Pix.
 // Each person's CallMeBot key lives in the function secrets (WA_KEY_*), never in code.
 const TEAM = [
   { name: 'Gustavo', phone: '5511933914350', secret: 'WA_KEY_GUSTAVO' },
   { name: 'Guilherme', phone: '5511968326459', secret: 'WA_KEY_GUILHERME' },
-  { name: 'Kevin', phone: '5511934361722', secret: 'WA_KEY_KEVIN' },
 ];
 
 /* ---------------- catalog (the only source of prices) ---------------- */
